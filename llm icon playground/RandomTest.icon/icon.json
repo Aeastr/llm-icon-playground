@@ -6,6 +6,15 @@
     {
       "layers" : [
         {
+          "fill" : {
+            "automatic-gradient" : "extended-srgb:0.00000,0.53333,1.00000,1.00000"
+          },
+          "hidden-specializations" : [
+            {
+              "appearance" : "tinted",
+              "value" : true
+            }
+          ],
           "image-name" : "256 Circle.png",
           "name" : "256 CircleCentre"
         }
@@ -24,19 +33,51 @@
       "hidden" : false,
       "layers" : [
         {
+          "fill" : {
+            "solid" : "extended-srgb:0.00000,0.53333,1.00000,1.00000"
+          },
           "image-name" : "256 Circle.png",
           "name" : "256 Circle",
+          "opacity-specializations" : [
+            {
+              "value" : 1
+            },
+            {
+              "appearance" : "dark",
+              "value" : 0.5
+            }
+          ],
           "position" : {
             "scale" : 1,
             "translation-in-points" : [
-              -167.328125,
-              -252.640625
+              37.7421875,
+              -366.5234375
             ]
           }
         },
         {
+          "blend-mode-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : "darken"
+            }
+          ],
+          "fill-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : {
+                "automatic-gradient" : "extended-srgb:0.00000,0.53333,1.00000,1.00000"
+              }
+            }
+          ],
           "image-name" : "512 60pxRoundedRectangle.png",
-          "name" : "512 60pxRoundedRectangle"
+          "name" : "512 60pxRoundedRectangle",
+          "opacity-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : 1
+            }
+          ]
         }
       ],
       "lighting" : "combined",
@@ -62,7 +103,13 @@
       "layers" : [
         {
           "image-name" : "256 Circle.png",
-          "name" : "256 Circle"
+          "name" : "256 Circle",
+          "opacity-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : 0.5
+            }
+          ]
         }
       ],
       "lighting" : "individual",
@@ -86,7 +133,19 @@
       "layers" : [
         {
           "image-name" : "512 60pxRoundedRectangle.png",
-          "name" : "512 60pxRoundedRectangle"
+          "name" : "512 60pxRoundedRectangle",
+          "position-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : {
+                "scale" : 1,
+                "translation-in-points" : [
+                  168,
+                  0
+                ]
+              }
+            }
+          ]
         }
       ],
       "position" : {
