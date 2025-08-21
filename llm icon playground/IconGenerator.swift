@@ -87,13 +87,14 @@ class IconGenerator {
         }
     }
     
-    /// Copies a single asset from the app bundle
+    /// Copies a single asset from the app bundle (Asset Catalog)
     private static func copyAsset(named assetName: String, to assetsDirectory: URL) throws {
-        // For now, we'll look for assets in the main bundle
-        // This will need to be updated once you add assets to the catalog
+        // Remove .svg extension for Asset Catalog lookup
+        let nameWithoutExtension = String(assetName.dropLast(4))
         
-        guard let assetURL = Bundle.main.url(forResource: assetName, withExtension: nil) else {
-            throw IconGeneratorError.assetCopyFailed("Asset not found: \(assetName)")
+        // Try to get asset data from Asset Catalog
+        guard let dataAsset = NSDataAsset(name: nameWithoutExtension) else {
+            throw IconGeneratorError.assetCopyFailed("Asset not found in Asset Catalog: \(assetName)")
         }
         
         let destinationURL = assetsDirectory.appendingPathComponent(assetName)
@@ -102,9 +103,9 @@ class IconGenerator {
             if FileManager.default.fileExists(atPath: destinationURL.path) {
                 try FileManager.default.removeItem(at: destinationURL)
             }
-            try FileManager.default.copyItem(at: assetURL, to: destinationURL)
+            try dataAsset.data.write(to: destinationURL)
         } catch {
-            throw IconGeneratorError.assetCopyFailed("Failed to copy \(assetName): \(error.localizedDescription)")
+            throw IconGeneratorError.assetCopyFailed("Failed to write \(assetName): \(error.localizedDescription)")
         }
     }
 }

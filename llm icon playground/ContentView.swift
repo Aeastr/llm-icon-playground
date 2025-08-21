@@ -14,6 +14,9 @@ struct ContentView: View {
     @State private var showingDirectoryPicker = false
     @State private var statusMessage = ""
     
+    private let userDefaults = UserDefaults.standard
+    private let outputDirectoryKey = "outputDirectory"
+    
     var body: some View {
         VStack(spacing: 20) {
             Text("Icon Generator")
@@ -55,6 +58,9 @@ struct ContentView: View {
             Spacer()
         }
         .padding()
+        .onAppear {
+            loadSavedDirectory()
+        }
         .fileImporter(
             isPresented: $showingDirectoryPicker,
             allowedContentTypes: [.folder],
@@ -66,6 +72,7 @@ struct ContentView: View {
                     // Start accessing security-scoped resource
                     _ = url.startAccessingSecurityScopedResource()
                     outputDirectory = url
+                    saveDirectory(url)
                     statusMessage = "Directory selected: \(url.lastPathComponent)"
                 }
             case .failure(let error):
@@ -77,16 +84,16 @@ struct ContentView: View {
     private func generateTestIcon() {
         guard let outputDir = outputDirectory else { return }
         
-        // Create a simple test icon
+        // Create a simple test icon with proper background fill
         let testIcon = IconFile.simple(
             fill: Fill(
-                automaticGradient: "extended-srgb:0.2,0.6,1.0,1.0",
+                automaticGradient: "display-p3:0.97049,0.31165,0.19665,1.00000",
                 solid: nil
             ),
             groups: [
                 Group.simple(layers: [
                     Layer.simple(
-                        name: "Background",
+                        name: "Circle",
                         imageName: "1024x1024pxCircle.svg",
                         position: Position(
                             scale: 0.8,
@@ -110,6 +117,31 @@ struct ContentView: View {
         
         // Stop accessing security-scoped resource
         outputDir.stopAccessingSecurityScopedResource()
+    }
+    
+    private func loadSavedDirectory() {
+        if let bookmarkData = userDefaults.data(forKey: outputDirectoryKey) {
+            do {
+                var isStale = false
+                let url = try URL(resolvingBookmarkData: bookmarkData, options: .withSecurityScope, relativeTo: nil, bookmarkDataIsStale: &isStale)
+                
+                if !isStale {
+                    outputDirectory = url
+                    statusMessage = "Using saved directory: \(url.lastPathComponent)"
+                }
+            } catch {
+                print("Failed to resolve bookmark: \(error)")
+            }
+        }
+    }
+    
+    private func saveDirectory(_ url: URL) {
+        do {
+            let bookmarkData = try url.bookmarkData(options: .withSecurityScope, includingResourceValuesForKeys: nil, relativeTo: nil)
+            userDefaults.set(bookmarkData, forKey: outputDirectoryKey)
+        } catch {
+            print("Failed to create bookmark: \(error)")
+        }
     }
 }
 
