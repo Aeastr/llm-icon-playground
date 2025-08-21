@@ -13,6 +13,7 @@ struct ContentView: View {
     @State private var outputDirectory: URL?
     @State private var showingDirectoryPicker = false
     @State private var statusMessage = ""
+    @State private var isAccessingSecurityScopedResource = false
     
     private let userDefaults = UserDefaults.standard
     private let outputDirectoryKey = "outputDirectory"
@@ -69,11 +70,20 @@ struct ContentView: View {
             switch result {
             case .success(let urls):
                 if let url = urls.first {
+                    // Stop previous resource access if any
+                    if isAccessingSecurityScopedResource, let currentDir = outputDirectory {
+                        currentDir.stopAccessingSecurityScopedResource()
+                    }
+                    
                     // Start accessing security-scoped resource
-                    _ = url.startAccessingSecurityScopedResource()
-                    outputDirectory = url
-                    saveDirectory(url)
-                    statusMessage = "Directory selected: \(url.lastPathComponent)"
+                    if url.startAccessingSecurityScopedResource() {
+                        outputDirectory = url
+                        isAccessingSecurityScopedResource = true
+                        saveDirectory(url)
+                        statusMessage = "Directory selected: \(url.lastPathComponent)"
+                    } else {
+                        statusMessage = "Failed to access selected directory"
+                    }
                 }
             case .failure(let error):
                 statusMessage = "Error selecting directory: \(error.localizedDescription)"
@@ -115,8 +125,7 @@ struct ContentView: View {
             statusMessage = "Error generating icon: \(error.localizedDescription)"
         }
         
-        // Stop accessing security-scoped resource
-        outputDir.stopAccessingSecurityScopedResource()
+        // Don't stop accessing - keep permissions for next use
     }
     
     private func loadSavedDirectory() {
@@ -126,11 +135,20 @@ struct ContentView: View {
                 let url = try URL(resolvingBookmarkData: bookmarkData, options: .withSecurityScope, relativeTo: nil, bookmarkDataIsStale: &isStale)
                 
                 if !isStale {
-                    outputDirectory = url
-                    statusMessage = "Using saved directory: \(url.lastPathComponent)"
+                    // Start accessing the security-scoped resource
+                    if url.startAccessingSecurityScopedResource() {
+                        outputDirectory = url
+                        isAccessingSecurityScopedResource = true
+                        statusMessage = "Using saved directory: \(url.lastPathComponent)"
+                    } else {
+                        statusMessage = "Could not access saved directory"
+                    }
+                } else {
+                    statusMessage = "Saved directory bookmark is stale, please reselect"
                 }
             } catch {
                 print("Failed to resolve bookmark: \(error)")
+                statusMessage = "Failed to load saved directory"
             }
         }
     }
