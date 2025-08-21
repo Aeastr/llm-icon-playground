@@ -52,6 +52,7 @@ Always use:
 }
 ```
 
-## Asset Creation
-**Status**: Coming soon
-Future feature to generate custom assets on demand.
+## Asset Limitations
+- **Cannot create custom shapes**: Must use only the assets listed in assets.md
+- **Cannot use SF Symbols**: SF Symbol support not yet available
+- **Asset creation**: Coming soon - future feature to generate custom assets on demand
