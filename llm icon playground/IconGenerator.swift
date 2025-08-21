@@ -6,12 +6,26 @@
 //
 
 import Foundation
+import AppKit
 
-enum IconGeneratorError: Error {
-    case directoryCreationFailed
-    case jsonWriteFailed
+enum IconGeneratorError: Error, LocalizedError {
+    case directoryCreationFailed(String)
+    case jsonWriteFailed(String)
     case assetCopyFailed(String)
     case invalidOutputPath
+    
+    var errorDescription: String? {
+        switch self {
+        case .directoryCreationFailed(let message):
+            return "Failed to create directory: \(message)"
+        case .jsonWriteFailed(let message):
+            return "Failed to write JSON: \(message)"
+        case .assetCopyFailed(let message):
+            return "Failed to copy asset: \(message)"
+        case .invalidOutputPath:
+            return "Invalid output path provided"
+        }
+    }
 }
 
 class IconGenerator {
@@ -32,17 +46,21 @@ class IconGenerator {
         let iconDirectory = outputDirectory.appendingPathComponent("\(iconName).icon")
         let assetsDirectory = iconDirectory.appendingPathComponent("Assets")
         
-        try FileManager.default.createDirectory(
-            at: iconDirectory,
-            withIntermediateDirectories: true,
-            attributes: nil
-        )
-        
-        try FileManager.default.createDirectory(
-            at: assetsDirectory,
-            withIntermediateDirectories: true,
-            attributes: nil
-        )
+        do {
+            try FileManager.default.createDirectory(
+                at: iconDirectory,
+                withIntermediateDirectories: true,
+                attributes: nil
+            )
+            
+            try FileManager.default.createDirectory(
+                at: assetsDirectory,
+                withIntermediateDirectories: true,
+                attributes: nil
+            )
+        } catch {
+            throw IconGeneratorError.directoryCreationFailed(error.localizedDescription)
+        }
         
         // Write icon.json
         try writeIconJSON(iconData: iconData, to: iconDirectory)
@@ -63,7 +81,7 @@ class IconGenerator {
             let jsonData = try encoder.encode(iconData)
             try jsonData.write(to: jsonURL)
         } catch {
-            throw IconGeneratorError.jsonWriteFailed
+            throw IconGeneratorError.jsonWriteFailed(error.localizedDescription)
         }
     }
     
@@ -82,20 +100,22 @@ class IconGenerator {
     
     /// Copies required assets from app bundle to the Assets directory
     private static func copyAssets(assetNames: Set<String>, to assetsDirectory: URL) throws {
+        print("Copying \(assetNames.count) assets: \(assetNames)")
         for assetName in assetNames {
+            print("Copying asset: \(assetName)")
             try copyAsset(named: assetName, to: assetsDirectory)
+            print("Successfully copied: \(assetName)")
         }
     }
     
-    /// Copies a single asset from the app bundle (Asset Catalog)
+    /// Copies a single asset from the app bundle
     private static func copyAsset(named assetName: String, to assetsDirectory: URL) throws {
-        // Remove .svg extension for Asset Catalog lookup
-        let nameWithoutExtension = String(assetName.dropLast(4))
-        
-        // Try to get asset data from Asset Catalog
-        guard let dataAsset = NSDataAsset(name: nameWithoutExtension) else {
-            throw IconGeneratorError.assetCopyFailed("Asset not found in Asset Catalog: \(assetName)")
+        // Look for the asset directly in the main bundle (no subdirectory)
+        guard let assetURL = Bundle.main.url(forResource: assetName, withExtension: nil) else {
+            throw IconGeneratorError.assetCopyFailed("Asset not found in bundle: \(assetName)")
         }
+        
+        print("Found asset at: bundle/\(assetName)")
         
         let destinationURL = assetsDirectory.appendingPathComponent(assetName)
         
@@ -103,9 +123,27 @@ class IconGenerator {
             if FileManager.default.fileExists(atPath: destinationURL.path) {
                 try FileManager.default.removeItem(at: destinationURL)
             }
-            try dataAsset.data.write(to: destinationURL)
+            try FileManager.default.copyItem(at: assetURL, to: destinationURL)
         } catch {
-            throw IconGeneratorError.assetCopyFailed("Failed to write \(assetName): \(error.localizedDescription)")
+            throw IconGeneratorError.assetCopyFailed("Failed to copy \(assetName): \(error.localizedDescription)")
+        }
+    }
+    
+    /// Recursively lists directory contents for debugging
+    private static func listDirectoryContents(at url: URL, prefix: String) {
+        do {
+            let contents = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: [.isDirectoryKey])
+            for itemURL in contents {
+                let resourceValues = try itemURL.resourceValues(forKeys: [.isDirectoryKey])
+                if resourceValues.isDirectory == true {
+                    print("📁 \(prefix)/\(itemURL.lastPathComponent)/")
+                    listDirectoryContents(at: itemURL, prefix: "\(prefix)/\(itemURL.lastPathComponent)")
+                } else {
+                    print("📄 \(prefix)/\(itemURL.lastPathComponent)")
+                }
+            }
+        } catch {
+            print("Could not list contents of \(prefix): \(error)")
         }
     }
 }
