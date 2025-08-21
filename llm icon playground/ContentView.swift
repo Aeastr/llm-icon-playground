@@ -63,6 +63,8 @@ struct ContentView: View {
             switch result {
             case .success(let urls):
                 if let url = urls.first {
+                    // Start accessing security-scoped resource
+                    _ = url.startAccessingSecurityScopedResource()
                     outputDirectory = url
                     statusMessage = "Directory selected: \(url.lastPathComponent)"
                 }
@@ -105,6 +107,9 @@ struct ContentView: View {
         } catch {
             statusMessage = "Error generating icon: \(error.localizedDescription)"
         }
+        
+        // Stop accessing security-scoped resource
+        outputDir.stopAccessingSecurityScopedResource()
     }
 }
 
