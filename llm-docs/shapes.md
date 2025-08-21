@@ -1,62 +1,54 @@
 # Available Shapes
 
-Asset library for .icon generation. All assets use the naming pattern: `[width]x[height]px[Shape][Rounding].png`
+Asset library for .icon generation. All assets are SVG format with the naming pattern: `[width]x[height]px[Shape][Rounding].svg`
 
-## Basic Shapes
+## How Sizing Works
+- All shapes have their native size as SVG bounds (e.g., 1024x1024px, 1024x512px)
+- Use the `scale` property in positioning to resize: `"scale": 0.5` = 50% of native size
+- Icon canvas is 1024x1024px total
 
 ### Circles
-- `256x256pxCircle.png`
-- `512x512pxCircle.png`  
-- `768x768pxCircle.png`
-- `1024x1024pxCircle.png`
+- `1024x1024pxCircle.svg`
 
-### Rectangles
-- `256x256pxRectangle.png`
-- `512x512pxRectangle.png`
-- `768x768pxRectangle.png`
-- `1024x1024pxRectangle.png`
-- `512x256pxRectangle.png` (wide)
-- `256x512pxRectangle.png` (tall)
+### Rectangles  
+- `1024x1024pxRectangle.svg`
+- `1024x512pxRectangle.svg` (wide)
+- `512x1024pxRectangle.svg` (tall)
 
 ### Rounded Rectangles
-- `256x256pxRoundedRectangle20px.png`
-- `512x512pxRoundedRectangle40px.png`
-- `512x512pxRoundedRectangle60px.png`
-- `768x768pxRoundedRectangle80px.png`
-- `1024x1024pxRoundedRectangle100px.png`
-
-## Suggested Additional Shapes
+- `1024x1024pxRoundedRectangle60px.svg`
+- `1024x1024pxRoundedRectangle100px.svg`
+- `1024x512pxRoundedRectangle40px.svg` (wide)
 
 ### Ellipses
-- `512x256pxEllipse.png` (wide oval)
-- `256x512pxEllipse.png` (tall oval)
+- `1024x512pxEllipse.svg` (wide oval)
+- `512x1024pxEllipse.svg` (tall oval)
 
 ### Triangles
-- `256x256pxTriangle.png`
-- `512x512pxTriangle.png`
+- `1024x1024pxTriangle.svg`
 
 ### Stars
-- `256x256pxStar5pt.png` (5-pointed star)
-- `256x256pxStar6pt.png` (6-pointed star)
+- `1024x1024pxStar5pt.svg` (5-pointed star)
+- `1024x1024pxStar6pt.svg` (6-pointed star)
 
 ### Lines/Strokes
-- `512x32pxRectangle.png` (horizontal line)
-- `32x512pxRectangle.png` (vertical line)
-- `512x64pxRoundedRectangle32px.png` (thick rounded line)
+- `1024x64pxRectangle.svg` (horizontal line)
+- `64x1024pxRectangle.svg` (vertical line)
+- `1024x128pxRoundedRectangle64px.svg` (thick rounded line)
 
 ### Specialty Shapes
-- `256x256pxHexagon.png`
-- `256x256pxDiamond.png`
-- `512x512pxHeart.png`
-- `256x256pxPill.png` (very rounded rectangle)
+- `1024x1024pxHexagon.svg`
+- `1024x1024pxDiamond.svg`
+- `1024x1024pxHeart.svg`
+- `1024x512pxPill.svg` (very rounded rectangle)
 
 ### Text/Symbols
-- `128x128pxPlus.png` (+ symbol)
-- `128x128pxMinus.png` (- symbol)
-- `128x128pxX.png` (× symbol)
-- `128x128pxCheck.png` (✓ symbol)
+- `512x512pxPlus.svg` (+ symbol)
+- `512x512pxMinus.svg` (- symbol)
+- `512x512pxX.svg` (× symbol)
+- `512x512pxCheck.svg` (✓ symbol)
 
 ## Notes
-- Canvas size: 1024x1024px
-- All assets should be PNG with transparency
-- Rounding values indicate corner radius in pixels
+- All assets are SVG with scalable vector graphics
+- Rounding values indicate corner radius in pixels at native size
+- Use scale property to resize: scale 0.25 = 25% of native size
