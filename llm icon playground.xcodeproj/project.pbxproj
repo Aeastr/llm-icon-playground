@@ -6,8 +6,21 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		2DCE9BC32E57E47F00E2AFC9 /* constraints.md in Resources */ = {isa = PBXBuildFile; fileRef = 2DCE9BBE2E57E47F00E2AFC9 /* constraints.md */; };
+		2DCE9BC42E57E47F00E2AFC9 /* assets.md in Resources */ = {isa = PBXBuildFile; fileRef = 2DCE9BBD2E57E47F00E2AFC9 /* assets.md */; };
+		2DCE9BC52E57E47F00E2AFC9 /* syntax.md in Resources */ = {isa = PBXBuildFile; fileRef = 2DCE9BC12E57E47F00E2AFC9 /* syntax.md */; };
+		2DCE9BC62E57E47F00E2AFC9 /* examples.md in Resources */ = {isa = PBXBuildFile; fileRef = 2DCE9BBF2E57E47F00E2AFC9 /* examples.md */; };
+		2DCE9BC72E57E47F00E2AFC9 /* shapes.md in Resources */ = {isa = PBXBuildFile; fileRef = 2DCE9BC02E57E47F00E2AFC9 /* shapes.md */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		2DCE9BAB2E57D47200E2AFC9 /* llm icon playground.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "llm icon playground.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2DCE9BBD2E57E47F00E2AFC9 /* assets.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = assets.md; sourceTree = "<group>"; };
+		2DCE9BBE2E57E47F00E2AFC9 /* constraints.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = constraints.md; sourceTree = "<group>"; };
+		2DCE9BBF2E57E47F00E2AFC9 /* examples.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = examples.md; sourceTree = "<group>"; };
+		2DCE9BC02E57E47F00E2AFC9 /* shapes.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = shapes.md; sourceTree = "<group>"; };
+		2DCE9BC12E57E47F00E2AFC9 /* syntax.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = syntax.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -32,6 +45,7 @@
 		2DCE9BA22E57D47200E2AFC9 = {
 			isa = PBXGroup;
 			children = (
+				2DCE9BC22E57E47F00E2AFC9 /* llm-docs */,
 				2DCE9BAD2E57D47200E2AFC9 /* llm icon playground */,
 				2DCE9BAC2E57D47200E2AFC9 /* Products */,
 			);
@@ -43,6 +57,18 @@
 				2DCE9BAB2E57D47200E2AFC9 /* llm icon playground.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		2DCE9BC22E57E47F00E2AFC9 /* llm-docs */ = {
+			isa = PBXGroup;
+			children = (
+				2DCE9BBD2E57E47F00E2AFC9 /* assets.md */,
+				2DCE9BBE2E57E47F00E2AFC9 /* constraints.md */,
+				2DCE9BBF2E57E47F00E2AFC9 /* examples.md */,
+				2DCE9BC02E57E47F00E2AFC9 /* shapes.md */,
+				2DCE9BC12E57E47F00E2AFC9 /* syntax.md */,
+			);
+			path = "llm-docs";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -109,6 +135,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2DCE9BC32E57E47F00E2AFC9 /* constraints.md in Resources */,
+				2DCE9BC42E57E47F00E2AFC9 /* assets.md in Resources */,
+				2DCE9BC52E57E47F00E2AFC9 /* syntax.md in Resources */,
+				2DCE9BC62E57E47F00E2AFC9 /* examples.md in Resources */,
+				2DCE9BC72E57E47F00E2AFC9 /* shapes.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
