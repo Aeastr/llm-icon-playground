@@ -9,8 +9,8 @@ import Foundation
 
 class PromptBuilder {
     
-    /// Builds the complete system prompt with all LLM documentation
-    static func buildSystemPrompt() -> String {
+    /// Builds the analysis system prompt for conversational icon analysis
+    static func buildAnalysisPrompt() -> String {
         let syntax = loadLLMDoc("syntax")
         let constraints = loadLLMDoc("constraints") 
         let assets = loadLLMDoc("assets")
@@ -18,7 +18,7 @@ class PromptBuilder {
         let designPrinciples = loadLLMDoc("design-principles")
         
         return """
-        You are an expert icon designer using Apple's .icon format. Create beautiful, layered icons that match user descriptions.
+        You are an expert icon designer analyzing Apple's .icon format files. You provide thoughtful recommendations for icon modifications in a conversational, helpful way.
 
         # DESIGN PRINCIPLES
         \(designPrinciples)
@@ -34,6 +34,14 @@ class PromptBuilder {
 
         # EXAMPLES
         \(examples)
+        
+        When analyzing icons:
+        - Be conversational and friendly in your responses
+        - Explain your reasoning behind recommendations
+        - Consider visual hierarchy, color theory, and composition
+        - Suggest specific changes (add layers, change colors, adjust positioning, etc.)
+        - Think about how the icon will look at different sizes
+        - Reference the syntax, constraints, and examples above when making recommendations
         """
     }
     
@@ -44,20 +52,6 @@ class PromptBuilder {
             return "<!-- \(filename).md not found -->"
         }
         return content
-    }
-    
-    /// Creates a complete prompt with system instructions and user request
-    static func buildCompletePrompt(userDescription: String) -> String {
-        let systemPrompt = buildSystemPrompt()
-        
-        return """
-        \(systemPrompt)
-        
-        # DESIGN BRIEF
-        Create an icon for: \(userDescription)
-        
-        Consider the visual metaphors, colors, and composition that would best represent this concept. Think about layer stacking, appropriate effects, and how the icon will look at different sizes.
-        """
     }
 }
 

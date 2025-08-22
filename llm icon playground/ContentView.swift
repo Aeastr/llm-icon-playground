@@ -25,10 +25,7 @@ struct ContentView: View {
     @State private var showingAPIKeyField = false
     @AppStorage("selectedModel") var selectedModel = "gemini-2.5-flash"
     @AppStorage("useModelFolder") var useModelFolder = true
-    @State private var availableModels: [String] = GeminiClient.commonModels
-    @State private var showingFallbackAlert = false
-    @State private var fallbackAlertTitle = ""
-    @State private var fallbackAlertMessage = ""
+    @State private var availableModels: [String] = SimpleLLMClient.commonModels
     @State private var showChat = true
     @State private var chatLogger = ChatLogger()
     private let userDefaults = UserDefaults.standard
@@ -57,22 +54,8 @@ struct ContentView: View {
                     .padding()
                     .onAppear {
                         loadSavedIconFile()
-                        if GeminiClient.hasValidAPIKey() {
+                        if SimpleLLMClient.hasValidAPIKey() {
                             refreshModels()
-                        }
-                        
-                        // Listen for structured output fallback notifications
-                        NotificationCenter.default.addObserver(
-                            forName: Notification.Name("StructuredOutputFallback"),
-                            object: nil,
-                            queue: .main
-                        ) { notification in
-                            if let error = notification.object as? GeminiError,
-                               let details = error.fallbackDetails {
-                                fallbackAlertTitle = "Fallback to Unstructured Mode"
-                                fallbackAlertMessage = details
-                                showingFallbackAlert = true
-                            }
                         }
                     }
                     .fileImporter(
@@ -102,16 +85,11 @@ struct ContentView: View {
                             statusMessage = "Error selecting icon file: \(error.localizedDescription)"
                         }
                     }
-                    .alert(fallbackAlertTitle, isPresented: $showingFallbackAlert) {
-                        Button("OK") { }
-                    } message: {
-                        Text(fallbackAlertMessage)
-                    }
             }
             .navigationTitle("Icon Experiment")
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    let hasKey = GeminiClient.hasValidAPIKey()
+                    let hasKey = SimpleLLMClient.hasValidAPIKey()
                     Button(hasKey ? "Change API Key" : "Set API Key", systemImage: hasKey ? "key.fill" : "key.slash.fill") {
                         showingAPIKeyField.toggle()
                         }
@@ -134,7 +112,7 @@ struct ContentView: View {
                             
                             
                             // Model Selection
-                            if GeminiClient.hasValidAPIKey() {
+                            if SimpleLLMClient.hasValidAPIKey() {
                                 VStack(alignment: .leading, spacing: 10) {
                                     HStack{
                                         Picker("Model",selection: $selectedModel) {
@@ -194,13 +172,13 @@ struct ContentView: View {
     
     
     private func canGenerateIcon() -> Bool {
-        return GeminiClient.hasValidAPIKey() && 
+        return SimpleLLMClient.hasValidAPIKey() && 
                !iconDescription.isEmpty &&
                selectedIconFile != nil
     }
     
     private func saveAPIKey() {
-        if GeminiClient.setAPIKey(apiKey) {
+        if SimpleLLMClient.setAPIKey(apiKey) {
             statusMessage = "API key saved securely"
             showingAPIKeyField = false
             apiKey = ""
@@ -211,17 +189,15 @@ struct ContentView: View {
     
     private func generateAIIcon() {
         guard let iconFile = selectedIconFile else { return }
-        guard let geminiClient = GeminiClient.client(model: selectedModel) else {
+        guard let llmClient = SimpleLLMClient.client(model: selectedModel) else {
             statusMessage = "Error: No valid API key"
             return
         }
         
         isGenerating = true
-        statusMessage = "Generating icon with AI..."
+        statusMessage = "Analyzing icon..."
         
-        let systemPrompt = PromptBuilder.buildSystemPrompt()
-        
-        geminiClient.analyzeIcon(iconFileURL: iconFile, userRequest: iconDescription, chatLogger: chatLogger) { result in
+        llmClient.analyzeIcon(iconFileURL: iconFile, userRequest: iconDescription, chatLogger: chatLogger) { result in
             DispatchQueue.main.async {
                 self.isGenerating = false
                 
@@ -237,31 +213,31 @@ struct ContentView: View {
         }
     }
     
-    private func testGemini() {
-        guard let geminiClient = GeminiClient.shared else {
+    private func testLLM() {
+        guard let llmClient = SimpleLLMClient.shared else {
             statusMessage = "Error: No valid API key"
             return
         }
         
         isGenerating = true
-        statusMessage = "Testing Gemini connection..."
+        statusMessage = "Testing LLM connection..."
         
-        geminiClient.generateText(prompt: "Say hello and return a simple JSON object with one property called 'test' with value 'success'.") { result in
+        llmClient.generateText(prompt: "Say hello in a friendly way.") { result in
             DispatchQueue.main.async {
                 self.isGenerating = false
                 
                 switch result {
                 case .success(let response):
-                    self.statusMessage = "✅ Gemini working! Response: \(response.prefix(100))..."
+                    self.statusMessage = "✅ LLM working! Response: \(response.prefix(100))..."
                 case .failure(let error):
-                    self.statusMessage = "❌ Gemini test failed: \(error.localizedDescription)"
+                    self.statusMessage = "❌ LLM test failed: \(error.localizedDescription)"
                 }
             }
         }
     }
     
     private func refreshModels() {
-        GeminiClient.getAvailableModels { result in
+        SimpleLLMClient.getAvailableModels { result in
             switch result {
             case .success(let models):
                 self.availableModels = models
