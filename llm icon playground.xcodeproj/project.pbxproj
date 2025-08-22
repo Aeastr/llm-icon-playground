@@ -31,6 +31,11 @@
 			path = "llm icon playground";
 			sourceTree = "<group>";
 		};
+		2DCE9C132E5807E400E2AFC9 /* Generations */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Generations;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +52,7 @@
 		2DCE9BA22E57D47200E2AFC9 = {
 			isa = PBXGroup;
 			children = (
+				2DCE9C132E5807E400E2AFC9 /* Generations */,
 				2DCE9BC22E57E47F00E2AFC9 /* llm-docs */,
 				2DCE9BAD2E57D47200E2AFC9 /* llm icon playground */,
 				2DCE9BAC2E57D47200E2AFC9 /* Products */,

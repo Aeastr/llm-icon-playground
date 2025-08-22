@@ -225,7 +225,7 @@ struct ContentView: View {
             try IconGenerator.createIconFile(
                 iconData: testIcon,
                 outputDirectory: outputDir,
-                iconName: iconName
+                iconName: fileNameWithModel()
             )
             statusMessage = "Icon generated successfully!"
         } catch {
@@ -237,6 +237,12 @@ struct ContentView: View {
     
     private func finalIconName() -> String {
         return iconName.isEmpty ? iconDescription.isEmpty ? "Icon" : iconDescription : iconName
+    }
+    
+    private func fileNameWithModel() -> String {
+        let baseName = finalIconName().replacingOccurrences(of: " ", with: "_")
+        let model = selectedModel.replacingOccurrences(of: " ", with: "_")
+        return "\(baseName)-\(model)"
     }
     
     
@@ -286,7 +292,7 @@ struct ContentView: View {
                         try IconGenerator.createIconFile(
                             iconData: iconFile,
                             outputDirectory: outputDir,
-                            iconName: self.iconName
+                            iconName: self.fileNameWithModel()
                         )
                         self.statusMessage = "AI icon generated successfully! 🎉"
                     } catch {
@@ -373,3 +379,4 @@ struct ContentView: View {
 #Preview {
     ContentView()
 }
+

@@ -1,0 +1,78 @@
+{
+  "fill" : {
+    "automatic-gradient" : "extended-srgb:0.1,0.5,0.9,1.0"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,1.0,1.0,1.0"
+          },
+          "image-name" : "1024x1024pxTriangle.svg",
+          "name" : "AirplaneFrontWing",
+          "position" : {
+            "scale" : 0.5,
+            "translation-in-points" : [
+              25,
+              25
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.85,0.85,0.9,1.0"
+          },
+          "image-name" : "1024x1024pxTriangle.svg",
+          "name" : "AirplaneBackWing",
+          "position" : {
+            "scale" : 0.5,
+            "translation-in-points" : [
+              -25,
+              -25
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,1.0,1.0,0.5"
+          },
+          "image-name" : "1024x128pxRoundedRectangle64px.svg",
+          "name" : "MotionTrail1",
+          "position" : {
+            "scale" : 0.4,
+            "translation-in-points" : [
+              -150,
+              -150
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,1.0,1.0,0.3"
+          },
+          "image-name" : "1024x128pxRoundedRectangle64px.svg",
+          "name" : "MotionTrail2",
+          "position" : {
+            "scale" : 0.3,
+            "translation-in-points" : [
+              -220,
+              -220
+            ]
+          }
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.3
+      },
+      "specular" : true
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}
