@@ -289,10 +289,16 @@ struct ContentView: View {
                     
                     // Try to create the icon file
                     do {
+                        let generationInfo = GenerationInfo(
+                            model: self.selectedModel,
+                            prompt: self.iconDescription
+                        )
+                        
                         try IconGenerator.createIconFile(
                             iconData: iconFile,
                             outputDirectory: outputDir,
-                            iconName: self.fileNameWithModel()
+                            iconName: self.fileNameWithModel(),
+                            generationInfo: generationInfo
                         )
                         self.statusMessage = "AI icon generated successfully! 🎉"
                     } catch {

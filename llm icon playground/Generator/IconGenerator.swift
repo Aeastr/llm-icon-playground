@@ -8,6 +8,20 @@
 import Foundation
 import AppKit
 
+struct GenerationInfo: Codable {
+    let model: String
+    let prompt: String
+    let temperature: Double?
+    let timestamp: Date
+    
+    init(model: String, prompt: String, temperature: Double? = nil) {
+        self.model = model
+        self.prompt = prompt
+        self.temperature = temperature
+        self.timestamp = Date()
+    }
+}
+
 enum IconGeneratorError: Error, LocalizedError {
     case directoryCreationFailed(String)
     case jsonWriteFailed(String)
@@ -35,11 +49,13 @@ class IconGenerator {
     ///   - iconData: The icon structure to encode
     ///   - outputDirectory: Directory where the .icon folder should be created
     ///   - iconName: Name for the .icon folder (without .icon extension)
+    ///   - generationInfo: Optional metadata about how the icon was generated
     /// - Throws: IconGeneratorError
     static func createIconFile(
         iconData: IconFile,
         outputDirectory: URL,
-        iconName: String
+        iconName: String,
+        generationInfo: GenerationInfo? = nil
     ) throws {
         
         // Create .icon directory
@@ -65,6 +81,11 @@ class IconGenerator {
         // Write icon.json
         try writeIconJSON(iconData: iconData, to: iconDirectory)
         
+        // Write generationInfo.json if provided
+        if let generationInfo = generationInfo {
+            try writeGenerationInfoJSON(generationInfo: generationInfo, to: iconDirectory)
+        }
+        
         // Extract and copy required assets
         let requiredAssets = extractRequiredAssets(from: iconData)
         try copyAssets(assetNames: requiredAssets, to: assetsDirectory)
@@ -79,6 +100,22 @@ class IconGenerator {
         
         do {
             let jsonData = try encoder.encode(iconData)
+            try jsonData.write(to: jsonURL)
+        } catch {
+            throw IconGeneratorError.jsonWriteFailed(error.localizedDescription)
+        }
+    }
+    
+    /// Writes the generationInfo.json file
+    private static func writeGenerationInfoJSON(generationInfo: GenerationInfo, to directory: URL) throws {
+        let jsonURL = directory.appendingPathComponent("generationInfo.json")
+        
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        encoder.dateEncodingStrategy = .iso8601
+        
+        do {
+            let jsonData = try encoder.encode(generationInfo)
             try jsonData.write(to: jsonURL)
         } catch {
             throw IconGeneratorError.jsonWriteFailed(error.localizedDescription)

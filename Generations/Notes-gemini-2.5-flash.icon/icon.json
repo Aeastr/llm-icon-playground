@@ -1,0 +1,81 @@
+{
+  "fill" : {
+    "solid" : "extended-srgb:0.95,0.95,0.95,1.0"
+  },
+  "groups" : [
+    {
+      "blend-mode" : "multiply",
+      "layers" : [
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.2,0.3,0.4,1.0"
+          },
+          "image-name" : "1024x64pxRectangle.svg",
+          "name" : "ThoughtLine1",
+          "position" : {
+            "scale" : 0.5,
+            "translation-in-points" : [
+              0,
+              -50
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.2,0.3,0.4,1.0"
+          },
+          "image-name" : "1024x64pxRectangle.svg",
+          "name" : "ThoughtLine2",
+          "position" : {
+            "scale" : 0.4,
+            "translation-in-points" : [
+              0,
+              50
+            ]
+          }
+        }
+      ],
+      "lighting" : "combined",
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.1
+      },
+      "specular" : false,
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.1
+      }
+    },
+    {
+      "blur-material" : 0.05,
+      "layers" : [
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.98,0.98,0.98,1.0"
+          },
+          "image-name" : "1024x1024pxRoundedRectangle100px.svg",
+          "name" : "Paper",
+          "position" : {
+            "scale" : 0.7,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "lighting" : "combined",
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.3
+      },
+      "specular" : true
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}
