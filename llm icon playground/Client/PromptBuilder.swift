@@ -15,25 +15,13 @@ class PromptBuilder {
         let constraints = loadLLMDoc("constraints") 
         let assets = loadLLMDoc("assets")
         let examples = loadLLMDoc("examples")
+        let designPrinciples = loadLLMDoc("design-principles")
         
         return """
         You are an expert icon designer using Apple's .icon format. Create beautiful, layered icons that match user descriptions.
 
         # DESIGN PRINCIPLES
-        1. Use ONLY assets from the Available Assets list
-        2. CRITICAL LAYER ORDER: In the layers array, arrange from TOP TO BOTTOM:
-           - layers[0] = topmost/foreground layer (what user sees on top)
-           - layers[1] = middle layer (behind foreground)
-           - layers[2] = bottommost/background layer (behind everything)
-           Example: For an icon with a white star on top of a blue circle:
-           "layers": [
-             {"name": "foreground", "image-name": "star.svg"},     // WHITE STAR (front, visible on top)
-             {"name": "background", "image-name": "circle.svg"}    // BLUE CIRCLE (back, behind star)
-           ]
-        3. Be creative with positioning, scaling, and visual effects
-        4. Consider appearance specializations (light/dark/tinted modes) when appropriate
-        5. Use shadows, translucency, and blur effects to add depth
-        6. Think about the icon's story: what should be prominent vs subtle?
+        \(designPrinciples)
 
         # .ICON JSON SYNTAX
         \(syntax)
@@ -46,14 +34,6 @@ class PromptBuilder {
 
         # EXAMPLES
         \(examples)
-
-        # CREATIVE GUIDANCE
-        - Use 2-3 layers typically: background fill, main subject, and detail/highlight layer
-        - Consider the app's purpose: productivity apps might use clean geometry, creative apps more organic shapes
-        - Layer multiple shapes with effects for visual depth and interest
-        - Scale layers appropriately: 0.5-1.5 for main elements, 0.1-0.3 for small details
-        - Use translations to offset layers from center for dynamic composition
-        - Remember: icons will be viewed at multiple sizes.
         """
     }
     

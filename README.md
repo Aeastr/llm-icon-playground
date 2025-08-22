@@ -1,3 +1,5 @@
+please ignore the disgusting UI, for now
+
 # LLM Icon Playground
 
 An experimental macOS app that uses LLMs to generate Apple's new .icon format files from text descriptions.
