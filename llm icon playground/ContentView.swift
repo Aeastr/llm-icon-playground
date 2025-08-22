@@ -9,7 +9,7 @@ import SwiftUI
 internal import UniformTypeIdentifiers
 
 struct ContentView: View {
-    @State private var iconName = "TestIcon"
+    @State private var iconName = ""
     @State private var iconDescription = ""
     @State private var outputDirectory: URL?
     @State private var showingDirectoryPicker = false
@@ -28,189 +28,163 @@ struct ContentView: View {
     private let outputDirectoryKey = "outputDirectory"
     
     var body: some View {
-        VStack(spacing: 20) {
-            Text("AI Icon Generator")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-            
-            // API Key Section
-            VStack(alignment: .leading, spacing: 10) {
-                HStack {
-                    Text("Gemini API Key:")
-                    Spacer()
+        NavigationStack{
+            ScrollView{
+                VStack(spacing: 20) {
+                    // Model Selection
                     if GeminiClient.hasValidAPIKey() {
-                        Image(systemName: "checkmark.circle.fill")
-                            .foregroundColor(.green)
-                        Button("Change") {
-                            showingAPIKeyField.toggle()
+                        VStack(alignment: .leading, spacing: 10) {
+                            HStack {
+                                Text("Model:")
+                                Spacer()
+                                Button("Refresh Models") {
+                                    refreshModels()
+                                }
+                                .buttonStyle(.borderless)
+                                .font(.caption)
+                            }
+                            
+                            Picker("Model", selection: $selectedModel) {
+                                ForEach(availableModels, id: \.self) { model in
+                                    Text(model).tag(model)
+                                }
+                            }
+                            .pickerStyle(.menu)
                         }
-                        .buttonStyle(.borderless)
-                    } else {
-                        Button("Configure") {
-                            showingAPIKeyField = true
-                        }
-                        .buttonStyle(.borderless)
                     }
-                }
-                
-                if showingAPIKeyField {
-                    HStack {
-                        SecureField("Enter Gemini API key", text: $apiKey)
+                    
+                    Divider()
+                    
+                    // Icon Generation Section
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Icon Description:")
+                        TextField("Describe your icon (e.g., 'Coffee app with steam')", text: $iconDescription, axis: .vertical)
                             .textFieldStyle(.roundedBorder)
-                        Button("Save") {
-                            saveAPIKey()
-                        }
-                        .disabled(apiKey.isEmpty)
-                        Button("Cancel") {
-                            showingAPIKeyField = false
-                            apiKey = ""
-                        }
-                    }
-                }
-            }
-            
-            // Model Selection
-            if GeminiClient.hasValidAPIKey() {
-                VStack(alignment: .leading, spacing: 10) {
-                    HStack {
-                        Text("Model:")
-                        Spacer()
-                        Button("Refresh Models") {
-                            refreshModels()
-                        }
-                        .buttonStyle(.borderless)
-                        .font(.caption)
+                            .lineLimit(3...6)
                     }
                     
-                    Picker("Model", selection: $selectedModel) {
-                        ForEach(availableModels, id: \.self) { model in
-                            Text(model).tag(model)
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Icon Name:")
+                        TextField(iconDescription.isEmpty ? "Enter Icon name" : iconDescription, text: $iconName)
+                            .textFieldStyle(.roundedBorder)
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Output Directory:")
+                        HStack {
+                            Text(outputDirectory?.lastPathComponent ?? "No directory selected")
+                                .foregroundColor(.secondary)
+                            Spacer()
+                            Button("Choose...") {
+                                showingDirectoryPicker = true
+                            }
                         }
                     }
-                    .pickerStyle(.menu)
-                }
-            }
-            
-            Divider()
-            
-            // Icon Generation Section
-            VStack(alignment: .leading, spacing: 10) {
-                Text("Icon Description:")
-                TextField("Describe your icon (e.g., 'Coffee app with steam')", text: $iconDescription, axis: .vertical)
-                    .textFieldStyle(.roundedBorder)
-                    .lineLimit(3...6)
-            }
-            
-            VStack(alignment: .leading, spacing: 10) {
-                Text("Icon Name:")
-                TextField("Enter icon name", text: $iconName)
-                    .textFieldStyle(.roundedBorder)
-            }
-            
-            VStack(alignment: .leading, spacing: 10) {
-                Text("Output Directory:")
-                HStack {
-                    Text(outputDirectory?.lastPathComponent ?? "No directory selected")
-                        .foregroundColor(.secondary)
+                    
+                    if !statusMessage.isEmpty {
+                        Text(statusMessage)
+                            .foregroundColor(statusMessage.contains("Error") ? .red : .green)
+                            .padding()
+                            .background(Color.gray.opacity(0.1))
+                            .cornerRadius(8)
+                    }
+                    
+                    if isGenerating {
+                        HStack {
+                            ProgressView()
+                                .scaleEffect(0.8)
+                            Text("Generating icon...")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    
                     Spacer()
-                    Button("Choose...") {
-                        showingDirectoryPicker = true
-                    }
                 }
-            }
-            
-            HStack(spacing: 10) {
-                Button("Generate AI Icon") {
-                    generateAIIcon()
-                }
-                .disabled(!canGenerateIcon() || isGenerating)
-                .buttonStyle(.borderedProminent)
-                
-                Button("Test Gemini") {
-                    testGemini()
-                }
-                .disabled(!GeminiClient.hasValidAPIKey() || isGenerating)
-                .buttonStyle(.bordered)
-                
-                Button("Test Simple Icon") {
-                    generateTestIcon()
-                }
-                .disabled(outputDirectory == nil || iconName.isEmpty || isGenerating)
-                .buttonStyle(.bordered)
-            }
-            
-            if !statusMessage.isEmpty {
-                Text(statusMessage)
-                    .foregroundColor(statusMessage.contains("Error") ? .red : .green)
-                    .padding()
-                    .background(Color.gray.opacity(0.1))
-                    .cornerRadius(8)
-            }
-            
-            if isGenerating {
-                HStack {
-                    ProgressView()
-                        .scaleEffect(0.8)
-                    Text("Generating icon...")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-            }
-            
-            Spacer()
-        }
-        .padding()
-        .onAppear {
-            loadSavedDirectory()
-            if GeminiClient.hasValidAPIKey() {
-                refreshModels()
-            }
-            
-            // Listen for structured output fallback notifications
-            NotificationCenter.default.addObserver(
-                forName: Notification.Name("StructuredOutputFallback"),
-                object: nil,
-                queue: .main
-            ) { notification in
-                if let error = notification.object as? GeminiError,
-                   let details = error.fallbackDetails {
-                    fallbackAlertTitle = "Fallback to Unstructured Mode"
-                    fallbackAlertMessage = details
-                    showingFallbackAlert = true
-                }
-            }
-        }
-        .fileImporter(
-            isPresented: $showingDirectoryPicker,
-            allowedContentTypes: [.folder],
-            allowsMultipleSelection: false
-        ) { result in
-            switch result {
-            case .success(let urls):
-                if let url = urls.first {
-                    // Stop previous resource access if any
-                    if isAccessingSecurityScopedResource, let currentDir = outputDirectory {
-                        currentDir.stopAccessingSecurityScopedResource()
+                .padding()
+                .onAppear {
+                    loadSavedDirectory()
+                    if GeminiClient.hasValidAPIKey() {
+                        refreshModels()
                     }
                     
-                    // Start accessing security-scoped resource
-                    if url.startAccessingSecurityScopedResource() {
-                        outputDirectory = url
-                        isAccessingSecurityScopedResource = true
-                        saveDirectory(url)
-                        statusMessage = "Directory selected: \(url.lastPathComponent)"
-                    } else {
-                        statusMessage = "Failed to access selected directory"
+                    // Listen for structured output fallback notifications
+                    NotificationCenter.default.addObserver(
+                        forName: Notification.Name("StructuredOutputFallback"),
+                        object: nil,
+                        queue: .main
+                    ) { notification in
+                        if let error = notification.object as? GeminiError,
+                           let details = error.fallbackDetails {
+                            fallbackAlertTitle = "Fallback to Unstructured Mode"
+                            fallbackAlertMessage = details
+                            showingFallbackAlert = true
+                        }
                     }
                 }
-            case .failure(let error):
-                statusMessage = "Error selecting directory: \(error.localizedDescription)"
+                .fileImporter(
+                    isPresented: $showingDirectoryPicker,
+                    allowedContentTypes: [.folder],
+                    allowsMultipleSelection: false
+                ) { result in
+                    switch result {
+                    case .success(let urls):
+                        if let url = urls.first {
+                            // Stop previous resource access if any
+                            if isAccessingSecurityScopedResource, let currentDir = outputDirectory {
+                                currentDir.stopAccessingSecurityScopedResource()
+                            }
+                            
+                            // Start accessing security-scoped resource
+                            if url.startAccessingSecurityScopedResource() {
+                                outputDirectory = url
+                                isAccessingSecurityScopedResource = true
+                                saveDirectory(url)
+                                statusMessage = "Directory selected: \(url.lastPathComponent)"
+                            } else {
+                                statusMessage = "Failed to access selected directory"
+                            }
+                        }
+                    case .failure(let error):
+                        statusMessage = "Error selecting directory: \(error.localizedDescription)"
+                    }
+                }
+                .alert(fallbackAlertTitle, isPresented: $showingFallbackAlert) {
+                    Button("OK") { }
+                } message: {
+                    Text(fallbackAlertMessage)
+                }
+            }
+            .navigationTitle("Icon Experiment")
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    let hasKey = GeminiClient.hasValidAPIKey()
+                    Button(hasKey ? "Change API Key" : "Set API Key", systemImage: hasKey ? "key.fill" : "key.slash.fill") {
+                        showingAPIKeyField.toggle()
+                        }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    
+                        Button("Generate") {
+                            generateAIIcon()
+                        }
+                        .disabled(!canGenerateIcon() || isGenerating)
+                }
             }
         }
-        .alert(fallbackAlertTitle, isPresented: $showingFallbackAlert) {
-            Button("OK") { }
-        } message: {
-            Text(fallbackAlertMessage)
+        .sheet(isPresented: $showingAPIKeyField) {
+            HStack {
+                SecureField("Enter Gemini API key", text: $apiKey)
+                    .textFieldStyle(.roundedBorder)
+                Button("Save") {
+                    saveAPIKey()
+                }
+                .disabled(apiKey.isEmpty)
+                Button("Cancel") {
+                    showingAPIKeyField = false
+                    apiKey = ""
+                }
+            }
         }
     }
     
