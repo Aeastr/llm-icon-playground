@@ -58,14 +58,19 @@ struct ContentView: View {
                         
                         Divider()
                         
-                        HStack{
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text("Icon Name:")
+                                TextField(iconDescription.isEmpty ? "Enter Icon name" : iconDescription, text: $iconName)
+                                    .textFieldStyle(.roundedBorder)
+                            }
+                            
                             VStack(alignment: .leading, spacing: 10) {
                                 Text("Icon Description:")
                                 TextField("Describe your icon (e.g., 'Coffee app with steam')", text: $iconDescription, axis: .vertical)
                                     .textFieldStyle(.roundedBorder)
                                     .lineLimit(3...6)
                             }
-                        }
+                        
                         
                         Divider()
                         
@@ -80,18 +85,6 @@ struct ContentView: View {
                                 }
                             }
                         }
-                        
-                        if isGenerating {
-                            HStack {
-                                ProgressView()
-                                    .scaleEffect(0.8)
-                                Text("Generating icon...")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-                        
-                        Spacer()
                     }
                     .padding()
                     .onAppear {
@@ -152,6 +145,18 @@ struct ContentView: View {
                     .overlay {
                         Text("Preview")
                     }
+                    .overlay(alignment: .bottom){
+                        if isGenerating {
+                            HStack {
+                                ProgressView()
+                                    .scaleEffect(0.8)
+                                Text("Generating icon...")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding()
+                        }
+                    }
             }
             .navigationTitle("Icon Experiment")
             .toolbar {
@@ -170,7 +175,7 @@ struct ContentView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     
-                        Button("Generate") {
+                        Button("Generate \(finalIconName())") {
                             generateAIIcon()
                         }
                         .disabled(!canGenerateIcon() || isGenerating)
@@ -230,10 +235,14 @@ struct ContentView: View {
         // Don't stop accessing - keep permissions for next use
     }
     
+    private func finalIconName() -> String {
+        return iconName.isEmpty ? iconDescription.isEmpty ? "Icon" : iconDescription : iconName
+    }
+    
+    
     private func canGenerateIcon() -> Bool {
         return GeminiClient.hasValidAPIKey() && 
-               !iconDescription.isEmpty && 
-               !iconName.isEmpty && 
+               !iconDescription.isEmpty &&
                outputDirectory != nil
     }
     
