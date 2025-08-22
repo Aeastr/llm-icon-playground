@@ -208,6 +208,57 @@ class GeminiClient {
         generateStructuredIcon(description: description, systemPrompt: systemPrompt, chatLogger: chatLogger, completion: completion)
     }
     
+    /// Analyzes an icon file and generates suggestions for modifications
+    func analyzeIcon(iconFileURL: URL, userRequest: String, chatLogger: ChatLogger? = nil, completion: @escaping (Result<String, Error>) -> Void) {
+        let toolsManager = IconToolsManager(iconFileURL: iconFileURL, chatLogger: chatLogger)
+        
+        let systemPrompt = """
+        You are an expert icon designer analyzing an Apple .icon file. You have access to several tools to examine the icon structure:
+        
+        - readIconConfig: Get overview of the icon (background, group count, etc.)
+        - readGroups: List all groups in the icon
+        - readLayers(groupIndex): List layers in a specific group
+        - getGroupDetails(groupIndex): Get detailed info about a group
+        - getLayerDetails(groupIndex, layerIndex): Get detailed info about a layer
+        
+        Start by getting an overview of the icon structure, then examine relevant groups and layers to understand the current design. Based on your analysis and the user's request, provide specific recommendations for modifications.
+        
+        Always start by calling readIconConfig to understand the overall structure.
+        """
+        
+        let prompt = """
+        \(systemPrompt)
+        
+        User Request: \(userRequest)
+        
+        Please analyze the current icon structure and provide recommendations.
+        """
+        
+        chatLogger?.addUserMessage(userRequest)
+        chatLogger?.addSystemMessage("🔍 Starting icon analysis with function calling...")
+        
+        // For now, let's use a simple approach - call readIconConfig first
+        let configResult = toolsManager.executeToolCall(ToolCall(name: "readIconConfig", parameters: [:]))
+        
+        switch configResult {
+        case .success(let configInfo):
+            let analysisPrompt = """
+            \(prompt)
+            
+            Current Icon Configuration:
+            \(configInfo)
+            
+            Based on this information and the user's request, what specific changes would you recommend? Please be specific about which groups/layers to modify.
+            """
+            
+            generateText(prompt: analysisPrompt, chatLogger: chatLogger, completion: completion)
+            
+        case .error(let error):
+            chatLogger?.addErrorMessage("Failed to read icon config: \(error)")
+            completion(.failure(GeminiError.apiError("Failed to analyze icon: \(error)")))
+        }
+    }
+    
     /// Generates an icon using structured output (JSON Schema) with fallback
     func generateStructuredIcon(description: String, systemPrompt: String, chatLogger: ChatLogger? = nil, completion: @escaping (Result<IconFile, Error>) -> Void) {
         let prompt = buildPrompt(description: description, systemPrompt: systemPrompt)

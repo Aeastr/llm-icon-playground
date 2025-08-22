@@ -110,13 +110,6 @@ struct ContentView: View {
             }
             .navigationTitle("Icon Experiment")
             .toolbar {
-                ToolbarItem(placement: .status) {
-                    if !statusMessage.isEmpty {
-                        Text(statusMessage)
-                            .foregroundColor(statusMessage.contains("Error") ? .red : .green)
-                    }
-                }
-                .sharedBackgroundVisibility(.hidden)
                 ToolbarItem(placement: .confirmationAction) {
                     let hasKey = GeminiClient.hasValidAPIKey()
                     Button(hasKey ? "Change API Key" : "Set API Key", systemImage: hasKey ? "key.fill" : "key.slash.fill") {
@@ -125,7 +118,7 @@ struct ContentView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     
-                        Button("Generate \(finalIconName())") {
+                        Button("Analyze Icon") {
                             generateAIIcon()
                         }
                         .disabled(!canGenerateIcon() || isGenerating)
@@ -228,25 +221,17 @@ struct ContentView: View {
         
         let systemPrompt = PromptBuilder.buildSystemPrompt()
         
-        geminiClient.generateIcon(description: iconDescription, systemPrompt: systemPrompt, chatLogger: chatLogger) { result in
+        geminiClient.analyzeIcon(iconFileURL: iconFile, userRequest: iconDescription, chatLogger: chatLogger) { result in
             DispatchQueue.main.async {
                 self.isGenerating = false
                 
                 switch result {
-                case .success(let iconFile):
-                    // Validate the generated icon
-                    let validationErrors = PromptBuilder.validateIcon(iconFile)
-                    if !validationErrors.isEmpty {
-                        self.statusMessage = "Error: Generated icon has issues: \(validationErrors.joined(separator: ", "))"
-                        return
-                    }
-                    
-                    // TODO: For now, just show success - later we'll implement step-by-step modification
-                    self.statusMessage = "AI icon generation completed! 🎉"
-                    self.chatLogger.addSystemMessage("Icon structure generated successfully. Next: Implement step-by-step modification process.")
+                case .success(let analysis):
+                    self.statusMessage = "Icon analysis completed! 🎉"
+                    self.chatLogger.addSystemMessage("Analysis complete. Review recommendations in chat log.")
                     
                 case .failure(let error):
-                    self.statusMessage = "Error generating icon: \(error.localizedDescription)"
+                    self.statusMessage = "Error analyzing icon: \(error.localizedDescription)"
                 }
             }
         }
