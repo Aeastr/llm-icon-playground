@@ -9,8 +9,8 @@ import Foundation
 
 class PromptBuilder {
     
-    /// Builds the analysis system prompt for conversational icon analysis
-    static func buildAnalysisPrompt() -> String {
+    /// Builds the starting prompt for conversational icon analysis
+    static func buildStartingPrompt() -> String {
         let syntax = loadLLMDoc("syntax")
         let constraints = loadLLMDoc("constraints") 
         let assets = loadLLMDoc("assets")
