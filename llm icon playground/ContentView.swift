@@ -18,7 +18,7 @@ struct ContentView: View {
     @State private var apiKey = ""
     @State private var isGenerating = false
     @State private var showingAPIKeyField = false
-    @State private var selectedModel = "gemini-2.5-flash"
+    @AppStorage("selectedModel") var selectedModel = "gemini-2.5-flash"
     @State private var availableModels: [String] = GeminiClient.commonModels
     @State private var showingFallbackAlert = false
     @State private var fallbackAlertTitle = ""
@@ -31,26 +31,28 @@ struct ContentView: View {
         NavigationStack{
             HStack{
                 ScrollView{
-                    VStack(spacing: 20) {
+                    VStack(spacing: 15) {
                         // Model Selection
                         if GeminiClient.hasValidAPIKey() {
                             VStack(alignment: .leading, spacing: 10) {
-                                HStack {
+                                HStack{
                                     Text("Model:")
-                                    Spacer()
-                                    Button("Refresh Models") {
-                                        refreshModels()
-                                    }
-                                    .buttonStyle(.borderless)
-                                    .font(.caption)
-                                }
-                                
-                                Picker("Model", selection: $selectedModel) {
-                                    ForEach(availableModels, id: \.self) { model in
-                                        Text(model).tag(model)
+                                        Spacer()
+                                    Picker(selection: $selectedModel) {
+                                        ForEach(availableModels, id: \.self) { model in
+                                            Text(model).tag(model)
+                                        }
+                                    } label: {
                                     }
                                 }
                                 .pickerStyle(.menu)
+                                
+                                Button("Refresh Models") {
+                                    refreshModels()
+                                }
+                                .buttonStyle(.borderless)
+                                .font(.caption)
+                                .frame(maxWidth: .infinity, alignment: .trailing)
                             }
                         }
                         
@@ -64,6 +66,8 @@ struct ContentView: View {
                                     .lineLimit(3...6)
                             }
                         }
+                        
+                        Divider()
                         
                         VStack(alignment: .leading, spacing: 10) {
                             Text("Output Directory:")
