@@ -1,0 +1,75 @@
+{
+  "fill" : {
+    "solid" : "extended-srgb:0.18000,0.22000,0.95000,1.00000"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "image-name" : "1024x1024pxStar5pt.svg",
+          "name" : "Star Forehead",
+          "opacity" : 1,
+          "position" : {
+            "scale" : 0.22,
+            "translation-in-points" : [
+              0,
+              -260
+            ]
+          }
+        },
+        {
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "Left Eye",
+          "opacity" : 1,
+          "position" : {
+            "scale" : 0.08,
+            "translation-in-points" : [
+              -140,
+              60
+            ]
+          }
+        },
+        {
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "Right Eye",
+          "opacity" : 1,
+          "position" : {
+            "scale" : 0.08,
+            "translation-in-points" : [
+              140,
+              60
+            ]
+          }
+        },
+        {
+          "hidden" : false,
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "Head",
+          "opacity" : 1,
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "lighting" : "individual",
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.25
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}

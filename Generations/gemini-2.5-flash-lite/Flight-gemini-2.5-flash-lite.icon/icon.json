@@ -1,0 +1,50 @@
+{
+  "fill" : {
+    "automatic-gradient" : "extended-srgb:0.4,0.7,1.0,1.0,0.8,0.9,1.0,1.0"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "image-name" : "1024x1024pxRectangle.svg",
+          "name" : "Sky Background",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "image-name" : "1024x1024pxRectangle.svg",
+          "name" : "Gradient Overlay",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "image-name" : "1024x1024pxRectangle.svg",
+          "name" : "Airplane Silhouette",
+          "position" : {
+            "scale" : 0.5,
+            "translation-in-points" : [
+              0,
+              -50
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}

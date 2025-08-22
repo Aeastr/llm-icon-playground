@@ -1,0 +1,87 @@
+{
+  "fill" : {
+    "solid" : "extended-srgb:0.0,0.0,0.0,0.0"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,0.95,0.85,1.0"
+          },
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "Sun",
+          "position" : {
+            "scale" : 0.08,
+            "translation-in-points" : [
+              0,
+              15
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,1.0,1.0,0.3"
+          },
+          "image-name" : "1024x64pxRectangle.svg",
+          "name" : "SunReflection",
+          "position" : {
+            "scale" : 0.25,
+            "translation-in-points" : [
+              0,
+              -25
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "automatic-gradient" : "extended-srgb:1.0,0.5,0.1,1.0"
+          },
+          "image-name" : "1024x512pxRectangle.svg",
+          "name" : "Sky",
+          "position" : {
+            "scale" : 0.95,
+            "translation-in-points" : [
+              0,
+              243.2
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.2,0.5,0.8,1.0"
+          },
+          "image-name" : "1024x512pxRectangle.svg",
+          "name" : "OceanTop",
+          "position" : {
+            "scale" : 0.95,
+            "translation-in-points" : [
+              0,
+              -243.2
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.1,0.3,0.6,1.0"
+          },
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "OceanBase",
+          "position" : {
+            "scale" : 0.95,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}
