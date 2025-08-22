@@ -147,7 +147,7 @@ class SimpleLLMClient {
         currentTools = createToolDefinitions()
         
         chatLogger?.addUserMessage(userMessage)
-        chatLogger?.addSystemMessage("💬 Chat started")
+        print("💬 Chat started")
         
         let systemPrompt = PromptBuilder.buildStartingPrompt()
         
@@ -194,7 +194,7 @@ class SimpleLLMClient {
             return
         }
         
-        currentChatLogger?.addDebugMessage("🔄 Continuing conversation with \(currentConversationHistory.count) messages in history")
+        print("🔄 Continuing conversation with \(currentConversationHistory.count) messages in history")
         
         continueConversation(
             conversationHistory: currentConversationHistory,
@@ -204,10 +204,10 @@ class SimpleLLMClient {
             completion: { result in
                 switch result {
                 case .success(let text):
-                    self.currentChatLogger?.addDebugMessage("✅ Conversation completed successfully. Final text: '\(text.prefix(100))'")
+                    print("✅ Conversation completed successfully. Final text: '\(text.prefix(100))'")
                     completion(result)
                 case .failure(let error):
-                    self.currentChatLogger?.addErrorMessage("❌ Conversation failed: \(error.localizedDescription)")
+                    print("❌ Conversation failed: \(error.localizedDescription)")
                     completion(result)
                 }
             }
@@ -281,7 +281,7 @@ class SimpleLLMClient {
                 let functionCalls = candidate.content.parts.compactMap { $0.functionCall }
                 let textParts = candidate.content.parts.compactMap { $0.text }
                 
-                chatLogger?.addDebugMessage("📋 LLM response: \(functionCalls.count) function calls, \(textParts.count) text parts")
+                print("📋 LLM response: \(functionCalls.count) function calls, \(textParts.count) text parts")
                 
                 if !functionCalls.isEmpty {
                     // Execute function calls and continue conversation
@@ -338,12 +338,12 @@ class SimpleLLMClient {
                 } else {
                     // No more function calls, return final response
                     let finalText = candidate.content.parts.compactMap { $0.text }.joined(separator: " ")
-                    chatLogger?.addDebugMessage("🏁 LLM finished with final text (\(finalText.count) chars): '\(finalText.prefix(100))...'")
+                    print("🏁 LLM finished with final text (\(finalText.count) chars): '\(finalText.prefix(100))...'")
                     
                     if !finalText.isEmpty {
                         chatLogger?.addAssistantMessage(finalText)
                     } else {
-                        chatLogger?.addDebugMessage("⚠️ LLM returned empty final text")
+                        print("⚠️ LLM returned empty final text")
                     }
                     
                     // Update conversation history with final response

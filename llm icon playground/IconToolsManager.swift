@@ -12,7 +12,7 @@ struct IconToolsManager {
     let chatLogger: ChatLogger?
     
     func executeToolCall(_ toolCall: ToolCall) -> ToolResult {
-        chatLogger?.addDebugMessage("🔧 LLM called tool: \(toolCall.name) with parameters: \(toolCall.parameters)")
+        print("🔧 LLM called tool: \(toolCall.name) with parameters: \(toolCall.parameters)")
         
         do {
             let result: String
@@ -61,7 +61,7 @@ struct IconToolsManager {
             
         } catch {
             let errorMsg = "Tool error: \(error.localizedDescription)"
-            chatLogger?.addErrorMessage("❌ \(errorMsg)")
+            print("❌ \(errorMsg)")
             return ToolResult.error(errorMsg)
         }
     }
