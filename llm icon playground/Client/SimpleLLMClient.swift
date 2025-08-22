@@ -223,10 +223,10 @@ class SimpleLLMClient {
     }
     
     /// Starts a new chat conversation with access to icon analysis tools
-    func startChatWithIcon(iconFileURL: URL, userMessage: String, chatLogger: ChatLogger? = nil, completion: @escaping (Result<String, Error>) -> Void) {
+    func startChatWithIcon(iconFileURL: URL, userMessage: String, chatLogger: ChatLogger? = nil, previewManager: IconPreviewManager? = nil, completion: @escaping (Result<String, Error>) -> Void) {
         // Initialize conversation state
         currentChatLogger = chatLogger
-        currentToolsManager = IconToolsManager(iconFileURL: iconFileURL, chatLogger: chatLogger)
+        currentToolsManager = IconToolsManager(iconFileURL: iconFileURL, chatLogger: chatLogger, previewManager: previewManager)
         currentTools = createToolDefinitions()
         
         // ALWAYS add user message to chat log first, before any API calls
@@ -304,7 +304,7 @@ class SimpleLLMClient {
         chatLogger: ChatLogger? = nil,
         completion: @escaping (Result<String, Error>) -> Void
     ) {
-        let toolsManager = IconToolsManager(iconFileURL: iconFileURL, chatLogger: chatLogger)
+        let toolsManager = IconToolsManager(iconFileURL: iconFileURL, chatLogger: chatLogger, previewManager: nil)
         let tools = createToolDefinitions()
         
         // Combine system prompt and user message into one message for Gemini

@@ -6,10 +6,12 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct IconToolsManager {
     let iconFileURL: URL
     let chatLogger: ChatLogger?
+    let previewManager: IconPreviewManager?
     
     func executeToolCall(_ toolCall: ToolCall) -> ToolResult {
         print("🔧 LLM called tool: \(toolCall.name) with parameters: \(toolCall.parameters)")
@@ -91,6 +93,12 @@ struct IconToolsManager {
             }
             
             chatLogger?.addToolCallMessage(name: toolCall.name, result: result)
+            
+            // Refresh the icon preview after successful edit
+            print("🔄 Attempting to refresh preview, previewManager: \(previewManager != nil ? "exists" : "nil")")
+            previewManager?.refreshPreview()
+            print("🔄 Refresh call completed")
+            
             return ToolResult.success(result)
             
         } catch {

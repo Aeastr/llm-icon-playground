@@ -1,6 +1,6 @@
 {
   "fill" : {
-    "automatic-gradient" : "extended-srgb:0.529,0.808,0.922,1.0"
+    "solid" : "display-p3:0.33395,0.95960,0.24948,1.00000"
   },
   "groups" : [
     {

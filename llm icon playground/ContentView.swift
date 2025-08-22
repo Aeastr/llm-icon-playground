@@ -30,26 +30,65 @@ struct ContentView: View {
     @State private var chatLogger = ChatLogger()
     @State private var llmClient: SimpleLLMClient?
     @State private var hasActiveConversation = false
+    @State private var iconPreviewManager = IconPreviewManager()
     private let userDefaults = UserDefaults.standard
     private let selectedIconFileKey = "selectedIconFile"
     
     var body: some View {
         NavigationStack{
                 ScrollView{
-                    VStack(spacing: 15) {
+                    VStack(spacing: 20) {
                         
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text("Icon File:")
-                            HStack {
-                                Text(selectedIconFile?.lastPathComponent ?? "No .icon file selected")
-                                    .foregroundColor(.secondary)
-                                Spacer()
+                        // Large centered icon preview
+                        VStack(spacing: 15) {
+                            if let iconFile = selectedIconFile {
+                                if let thumbnail = iconPreviewManager.currentThumbnail {
+                                    Image(nsImage: thumbnail)
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 300, height: 300)
+                                        .background(Color.gray.opacity(0.05))
+                                        .cornerRadius(16)
+                                        .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
+                                        .onTapGesture {
+                                            iconPreviewManager.forceRefresh()
+                                        }
+                                } else {
+                                    ProgressView()
+                                        .frame(width: 300, height: 300)
+                                        .background(Color.gray.opacity(0.05))
+                                        .cornerRadius(16)
+                                }
+                            } else {
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(Color.gray.opacity(0.2))
+                                    .frame(width: 300, height: 300)
+                                    .overlay(
+                                        VStack(spacing: 8) {
+                                            Image(systemName: "doc.badge.plus")
+                                                .font(.system(size: 40))
+                                                .foregroundColor(.secondary)
+                                            Text("No icon selected")
+                                                .font(.caption)
+                                                .foregroundColor(.secondary)
+                                        }
+                                    )
+                            }
+                            
+                            Text(selectedIconFile?.lastPathComponent ?? "No .icon file selected")
+                                .font(.headline)
+                                .foregroundColor(.primary)
+                            
+                            HStack(spacing: 12) {
                                 Button("Open...") {
                                     showingIconFilePicker = true
                                 }
+                                .buttonStyle(.bordered)
+                                
                                 Button("New...") {
                                     showingNewIconSheet = true
                                 }
+                                .buttonStyle(.bordered)
                             }
                         }
                     }
@@ -76,6 +115,7 @@ struct ContentView: View {
                                 // Start accessing security-scoped resource
                                 if url.startAccessingSecurityScopedResource() {
                                     selectedIconFile = url
+                                    iconPreviewManager.setIconURL(url)
                                     isAccessingSecurityScopedResource = true
                                     saveIconFile(url)
                                     statusMessage = "Icon file selected: \(url.lastPathComponent)"
@@ -106,6 +146,7 @@ struct ContentView: View {
             }
             .inspector(isPresented: $showChat) {
                 ChatView(chatLogger: chatLogger, hasActiveConversation: $hasActiveConversation)
+                    .environment(iconPreviewManager)
                     .safeAreaInset(edge: .bottom) {
                         VStack(spacing: 5){
                             TextField("Describe your changes.", text: $iconDescription, axis: .vertical)
@@ -232,7 +273,7 @@ struct ContentView: View {
         } else {
             // Start new conversation
             statusMessage = "Starting conversation..."
-            client.startChatWithIcon(iconFileURL: iconFile, userMessage: messageToSend, chatLogger: chatLogger) { result in
+            client.startChatWithIcon(iconFileURL: iconFile, userMessage: messageToSend, chatLogger: chatLogger, previewManager: iconPreviewManager) { result in
                 DispatchQueue.main.async {
                     self.isGenerating = false
                     self.hasActiveConversation = true
@@ -295,6 +336,7 @@ struct ContentView: View {
                     // Start accessing the security-scoped resource
                     if url.startAccessingSecurityScopedResource() {
                         selectedIconFile = url
+                        iconPreviewManager.setIconURL(url)
                         isAccessingSecurityScopedResource = true
                     } else {
                         statusMessage = "Could not access saved icon file"
