@@ -137,6 +137,7 @@ enum GeminiError: Error, LocalizedError {
     case apiError(String)
     case noContent
     case jsonParsingError(String)
+    case structuredOutputFailed(String, fallbackAttempted: Bool)
     
     var errorDescription: String? {
         switch self {
@@ -154,6 +155,36 @@ enum GeminiError: Error, LocalizedError {
             return "No content in response"
         case .jsonParsingError(let message):
             return "JSON parsing error: \(message)"
+        case .structuredOutputFailed(let reason, let fallbackAttempted):
+            if fallbackAttempted {
+                return "Structured output failed, fell back to unstructured mode: \(reason)"
+            } else {
+                return "Structured output failed: \(reason)"
+            }
+        }
+    }
+    
+    var isStructuredOutputIssue: Bool {
+        switch self {
+        case .structuredOutputFailed:
+            return true
+        default:
+            return false
+        }
+    }
+    
+    var fallbackDetails: String? {
+        switch self {
+        case .structuredOutputFailed(let reason, let fallbackAttempted):
+            return """
+            Structured Output Issue:
+            • Reason: \(reason)
+            • Fallback attempted: \(fallbackAttempted ? "Yes" : "No")
+            • Model may not fully support JSON Schema constraints
+            • Icon generation will use unstructured parsing instead
+            """
+        default:
+            return nil
         }
     }
 }
@@ -177,21 +208,66 @@ class GeminiClient {
         generateStructuredIcon(description: description, systemPrompt: systemPrompt, completion: completion)
     }
     
-    /// Generates an icon using structured output (JSON Schema)
+    /// Generates an icon using structured output (JSON Schema) with fallback
     func generateStructuredIcon(description: String, systemPrompt: String, completion: @escaping (Result<IconFile, Error>) -> Void) {
         let prompt = buildPrompt(description: description, systemPrompt: systemPrompt)
         
+        print("🔧 Attempting structured output generation...")
         generateStructuredText(prompt: prompt, schema: IconFile.responseSchema()) { result in
             switch result {
             case .success(let response):
                 do {
                     let iconFile = try self.parseIconResponse(response)
+                    print("✅ Structured output successful")
                     completion(.success(iconFile))
                 } catch {
-                    completion(.failure(error))
+                    print("❌ Structured output parsing failed: \(error.localizedDescription)")
+                    // Fallback to unstructured
+                    self.fallbackToUnstructured(description: description, systemPrompt: systemPrompt, 
+                                               originalError: error, completion: completion)
                 }
             case .failure(let error):
-                completion(.failure(error))
+                print("❌ Structured output API call failed: \(error.localizedDescription)")
+                // Fallback to unstructured
+                self.fallbackToUnstructured(description: description, systemPrompt: systemPrompt, 
+                                           originalError: error, completion: completion)
+            }
+        }
+    }
+    
+    /// Fallback to unstructured generation with detailed error reporting
+    private func fallbackToUnstructured(description: String, systemPrompt: String, 
+                                      originalError: Error, completion: @escaping (Result<IconFile, Error>) -> Void) {
+        print("🔄 Falling back to unstructured generation...")
+        
+        generateUnstructuredIcon(description: description, systemPrompt: systemPrompt) { fallbackResult in
+            switch fallbackResult {
+            case .success(let iconFile):
+                print("✅ Fallback to unstructured successful")
+                // Create a detailed error for the UI but still return success
+                let fallbackError = GeminiError.structuredOutputFailed(
+                    originalError.localizedDescription, 
+                    fallbackAttempted: true
+                )
+                
+                // For now, we'll complete with success but could add a notification mechanism
+                completion(.success(iconFile))
+                
+                // TODO: Add notification mechanism for UI alerts
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(
+                        name: Notification.Name("StructuredOutputFallback"), 
+                        object: fallbackError
+                    )
+                }
+                
+            case .failure(let fallbackError):
+                print("❌ Both structured and unstructured generation failed")
+                let detailedError = GeminiError.structuredOutputFailed(
+                    "Structured: \(originalError.localizedDescription), Unstructured: \(fallbackError.localizedDescription)",
+                    fallbackAttempted: true
+                )
+                completion(.failure(detailedError))
             }
         }
     }

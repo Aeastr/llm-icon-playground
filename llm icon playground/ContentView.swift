@@ -20,6 +20,9 @@ struct ContentView: View {
     @State private var showingAPIKeyField = false
     @State private var selectedModel = "gemini-2.5-flash"
     @State private var availableModels: [String] = GeminiClient.commonModels
+    @State private var showingFallbackAlert = false
+    @State private var fallbackAlertTitle = ""
+    @State private var fallbackAlertMessage = ""
     
     private let userDefaults = UserDefaults.standard
     private let outputDirectoryKey = "outputDirectory"
@@ -162,6 +165,20 @@ struct ContentView: View {
             if GeminiClient.hasValidAPIKey() {
                 refreshModels()
             }
+            
+            // Listen for structured output fallback notifications
+            NotificationCenter.default.addObserver(
+                forName: Notification.Name("StructuredOutputFallback"),
+                object: nil,
+                queue: .main
+            ) { notification in
+                if let error = notification.object as? GeminiError,
+                   let details = error.fallbackDetails {
+                    fallbackAlertTitle = "Fallback to Unstructured Mode"
+                    fallbackAlertMessage = details
+                    showingFallbackAlert = true
+                }
+            }
         }
         .fileImporter(
             isPresented: $showingDirectoryPicker,
@@ -189,6 +206,11 @@ struct ContentView: View {
             case .failure(let error):
                 statusMessage = "Error selecting directory: \(error.localizedDescription)"
             }
+        }
+        .alert(fallbackAlertTitle, isPresented: $showingFallbackAlert) {
+            Button("OK") { }
+        } message: {
+            Text(fallbackAlertMessage)
         }
     }
     
