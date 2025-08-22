@@ -9,10 +9,10 @@ import Foundation
 
 // MARK: - Root Icon Structure
 struct IconFile: Codable {
-    let fill: Fill?
-    let fillSpecializations: [FillSpecialization]?
-    let groups: [IconGroup]
-    let supportedPlatforms: SupportedPlatforms
+    var fill: Fill?
+    var fillSpecializations: [FillSpecialization]?
+    var groups: [IconGroup]
+    var supportedPlatforms: SupportedPlatforms
     
     enum CodingKeys: String, CodingKey {
         case fill, groups

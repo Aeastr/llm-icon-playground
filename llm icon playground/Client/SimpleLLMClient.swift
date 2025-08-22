@@ -495,6 +495,61 @@ class SimpleLLMClient {
                         ],
                         required: ["groupIndex", "layerIndex"]
                     )
+                ),
+                // MARK: - Icon Editing Tools
+                LLMRequest.FunctionDeclaration(
+                    name: "updateIconBackground",
+                    description: "Change the main background fill of the icon",
+                    parameters: LLMRequest.FunctionParameters(
+                        type: "object",
+                        properties: [
+                            "fillType": LLMRequest.PropertyDefinition(
+                                type: "string",
+                                description: "Type of fill: 'color' or 'gradient'"
+                            ),
+                            "color": LLMRequest.PropertyDefinition(
+                                type: "string",
+                                description: "Hex color code (required for color fills)"
+                            )
+                        ],
+                        required: ["fillType"]
+                    )
+                ),
+                LLMRequest.FunctionDeclaration(
+                    name: "addIconFillSpecialization",
+                    description: "Add a background appearance variant for light/dark mode",
+                    parameters: LLMRequest.FunctionParameters(
+                        type: "object",
+                        properties: [
+                            "appearance": LLMRequest.PropertyDefinition(
+                                type: "string",
+                                description: "Appearance mode: 'light' or 'dark'"
+                            ),
+                            "fillType": LLMRequest.PropertyDefinition(
+                                type: "string",
+                                description: "Type of fill: 'color' or 'gradient'"
+                            ),
+                            "color": LLMRequest.PropertyDefinition(
+                                type: "string",
+                                description: "Hex color code (required for color fills)"
+                            )
+                        ],
+                        required: ["appearance", "fillType"]
+                    )
+                ),
+                LLMRequest.FunctionDeclaration(
+                    name: "removeIconFillSpecialization",
+                    description: "Remove a background appearance variant",
+                    parameters: LLMRequest.FunctionParameters(
+                        type: "object",
+                        properties: [
+                            "appearance": LLMRequest.PropertyDefinition(
+                                type: "string",
+                                description: "Appearance mode to remove: 'light' or 'dark'"
+                            )
+                        ],
+                        required: ["appearance"]
+                    )
                 )
             ])
         ]

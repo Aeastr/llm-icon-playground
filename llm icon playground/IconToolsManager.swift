@@ -52,6 +52,40 @@ struct IconToolsManager {
                 let groupDetails = try IconAnalysisTools.getIconGroupDetails(iconFileURL: iconFileURL, groupIndex: groupIndex)
                 result = groupDetails.description
                 
+            // MARK: - Icon Editing Tools
+            case "updateIconBackground":
+                guard let fillType = toolCall.parameters["fillType"] as? String else {
+                    throw ToolError.invalidParameters("fillType is required")
+                }
+                let color = toolCall.parameters["color"] as? String
+                result = try IconTools.updateIconBackground(
+                    iconFileURL: iconFileURL,
+                    fillType: fillType,
+                    color: color
+                )
+                
+            case "addIconFillSpecialization":
+                guard let appearance = toolCall.parameters["appearance"] as? String,
+                      let fillType = toolCall.parameters["fillType"] as? String else {
+                    throw ToolError.invalidParameters("appearance and fillType are required")
+                }
+                let color = toolCall.parameters["color"] as? String
+                result = try IconTools.addIconFillSpecialization(
+                    iconFileURL: iconFileURL,
+                    appearance: appearance,
+                    fillType: fillType,
+                    color: color
+                )
+                
+            case "removeIconFillSpecialization":
+                guard let appearance = toolCall.parameters["appearance"] as? String else {
+                    throw ToolError.invalidParameters("appearance is required")
+                }
+                result = try IconTools.removeIconFillSpecialization(
+                    iconFileURL: iconFileURL,
+                    appearance: appearance
+                )
+                
             default:
                 throw ToolError.unknownTool(toolCall.name)
             }
@@ -62,6 +96,9 @@ struct IconToolsManager {
         } catch {
             let errorMsg = "Tool error: \(error.localizedDescription)"
             print("❌ \(errorMsg)")
+            
+            // Show failed tool call in chat with error message
+            chatLogger?.addToolCallMessage(name: toolCall.name, result: "❌ \(errorMsg)")
             return ToolResult.error(errorMsg)
         }
     }
@@ -98,6 +135,32 @@ struct IconToolsManager {
                 description: "Get detailed information about a specific group",
                 parameters: [
                     "groupIndex": ParameterDefinition(type: "string", description: "The index of the group to examine")
+                ]
+            ),
+            
+            // MARK: - Icon Editing Tools
+            ToolDefinition(
+                name: "updateIconBackground",
+                description: "Change the main background fill of the icon",
+                parameters: [
+                    "fillType": ParameterDefinition(type: "string", description: "Type of fill: 'color' or 'gradient'"),
+                    "color": ParameterDefinition(type: "string", description: "Hex color code (required for color fills)")
+                ]
+            ),
+            ToolDefinition(
+                name: "addIconFillSpecialization",
+                description: "Add a background appearance variant for light/dark mode",
+                parameters: [
+                    "appearance": ParameterDefinition(type: "string", description: "Appearance mode: 'light' or 'dark'"),
+                    "fillType": ParameterDefinition(type: "string", description: "Type of fill: 'color' or 'gradient'"),
+                    "color": ParameterDefinition(type: "string", description: "Hex color code (required for color fills)")
+                ]
+            ),
+            ToolDefinition(
+                name: "removeIconFillSpecialization",
+                description: "Remove a background appearance variant",
+                parameters: [
+                    "appearance": ParameterDefinition(type: "string", description: "Appearance mode to remove: 'light' or 'dark'")
                 ]
             )
         ]
