@@ -1,0 +1,63 @@
+{
+  "fill" : {
+    "solid" : "extended-srgb:0.15,0.15,0.18,1.0"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,0.843,0.0,1.0"
+          },
+          "image-name" : "512x512pxPlus.svg",
+          "name" : "Flash",
+          "position" : {
+            "scale" : 0.25,
+            "translation-in-points" : [
+              220,
+              220
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.3,0.6,1.0,1.0"
+          },
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "Inner Lens",
+          "position" : {
+            "scale" : 0.5,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.0,0.0,0.0,1.0"
+          },
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "Outer Lens",
+          "position" : {
+            "scale" : 0.8,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.4
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}

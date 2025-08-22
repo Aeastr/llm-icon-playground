@@ -1,55 +1,44 @@
 {
   "fill" : {
-    "linear-gradient" : [
-      "display-p3:0.46027,0.11462,0.19305,1.00000",
-      "display-p3:0.46027,0.26564,0.36612,1.00000"
-    ]
+    "automatic-gradient" : "extended-srgb:0.2,0.05,0.3,1.0"
   },
   "groups" : [
     {
       "layers" : [
         {
           "image-name" : "1024x1024pxCircle.svg",
-          "name" : "Top-Circle",
+          "name" : "NoteFlag",
           "position" : {
-            "scale" : 0.12,
+            "scale" : 0.18,
             "translation-in-points" : [
-              -40,
-              -180
-            ]
-          }
-        },
-        {
-          "image-name" : "1024x1024pxCircle.svg",
-          "name" : "Note-Head",
-          "position" : {
-            "scale" : 0.2,
-            "translation-in-points" : [
-              -120,
+              45,
               180
             ]
           }
         },
         {
-          "image-name" : "64x1024pxRectangle.svg",
-          "name" : "Stem",
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "NoteHead",
           "position" : {
-            "scale" : 0.4,
+            "scale" : 0.25,
             "translation-in-points" : [
-              -40,
-              0
+              -120,
+              -220
+            ]
+          }
+        },
+        {
+          "image-name" : "64x1024pxRectangle.svg",
+          "name" : "NoteStem",
+          "position" : {
+            "scale" : 0.45,
+            "translation-in-points" : [
+              -25,
+              -5
             ]
           }
         }
-      ],
-      "shadow" : {
-        "kind" : "layer-color",
-        "opacity" : 0.4
-      },
-      "translucency" : {
-        "enabled" : true,
-        "value" : 0.5
-      }
+      ]
     }
   ],
   "supported-platforms" : {
