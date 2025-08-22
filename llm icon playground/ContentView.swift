@@ -6,10 +6,10 @@
 //
 
 import SwiftUI
-internal import UniformTypeIdentifiers
+import UniformTypeIdentifiers
 
 extension UTType {
-    static let iconFile = UTType(filenameExtension: "icon")!
+    static let iconFile = UTType(filenameExtension: "icon", conformingTo: .package)!
 }
 
 struct ContentView: View {
@@ -77,7 +77,7 @@ struct ContentView: View {
                     }
                     .fileImporter(
                         isPresented: $showingIconFilePicker,
-                        allowedContentTypes: [.iconFile, .folder],
+                        allowedContentTypes: [.iconFile, .package, .folder],
                         allowsMultipleSelection: false
                     ) { result in
                         switch result {
@@ -135,7 +135,7 @@ struct ContentView: View {
                 ChatView(chatLogger: chatLogger)
                     .safeAreaInset(edge: .bottom) {
                         VStack(spacing: 5){
-                            TextField("Describe your icon (e.g., 'Coffee app with steam')", text: $iconDescription, axis: .vertical)
+                            TextField("Describe your changes.", text: $iconDescription, axis: .vertical)
                                 .textFieldStyle(.roundedBorder)
                                 .lineLimit(3...6)
                             
@@ -188,43 +188,6 @@ struct ContentView: View {
         }
     }
     
-    private func generateTestIcon() {
-        guard let outputDir = outputDirectory else { return }
-        
-        // Create a simple test icon with proper background fill
-        let testIcon = IconFile.simple(
-            fill: Fill(
-                automaticGradient: "display-p3:0.97049,0.31165,0.19665,1.00000",
-                solid: nil
-            ),
-            groups: [
-                Group.simple(layers: [
-                    Layer.simple(
-                        name: "Circle",
-                        imageName: "1024x1024pxCircle.svg",
-                        position: Position(
-                            scale: 0.8,
-                            translationInPoints: [0, 0]
-                        )
-                    )
-                ])
-            ]
-        )
-        
-        do {
-            try IconGenerator.createIconFile(
-                iconData: testIcon,
-                outputDirectory: outputDir,
-                iconName: fileNameWithModel(),
-                useModelFolder: useModelFolder
-            )
-            statusMessage = "Icon generated successfully!"
-        } catch {
-            statusMessage = "Error generating icon: \(error.localizedDescription)"
-        }
-        
-        // Don't stop accessing - keep permissions for next use
-    }
     
     private func finalIconName() -> String {
         return iconName.isEmpty ? iconDescription.isEmpty ? "Icon" : iconDescription : iconName
@@ -278,24 +241,9 @@ struct ContentView: View {
                         return
                     }
                     
-                    // Try to create the icon file
-                    do {
-                        let generationInfo = GenerationInfo(
-                            model: self.selectedModel,
-                            prompt: self.iconDescription
-                        )
-                        
-                        try IconGenerator.createIconFile(
-                            iconData: iconFile,
-                            outputDirectory: outputDir,
-                            iconName: self.fileNameWithModel(),
-                            generationInfo: generationInfo,
-                            useModelFolder: self.useModelFolder
-                        )
-                        self.statusMessage = "AI icon generated successfully! 🎉"
-                    } catch {
-                        self.statusMessage = "Error creating icon file: \(error.localizedDescription)"
-                    }
+                    // TODO: For now, just show success - later we'll implement step-by-step modification
+                    self.statusMessage = "AI icon generation completed! 🎉"
+                    self.chatLogger.addSystemMessage("Icon structure generated successfully. Next: Implement step-by-step modification process.")
                     
                 case .failure(let error):
                     self.statusMessage = "Error generating icon: \(error.localizedDescription)"
@@ -340,8 +288,8 @@ struct ContentView: View {
         }
     }
     
-    private func loadSavedDirectory() {
-        if let bookmarkData = userDefaults.data(forKey: outputDirectoryKey) {
+    private func loadSavedIconFile() {
+        if let bookmarkData = userDefaults.data(forKey: selectedIconFileKey) {
             do {
                 var isStale = false
                 let url = try URL(resolvingBookmarkData: bookmarkData, options: .withSecurityScope, relativeTo: nil, bookmarkDataIsStale: &isStale)
@@ -349,25 +297,25 @@ struct ContentView: View {
                 if !isStale {
                     // Start accessing the security-scoped resource
                     if url.startAccessingSecurityScopedResource() {
-                        outputDirectory = url
+                        selectedIconFile = url
                         isAccessingSecurityScopedResource = true
                     } else {
-                        statusMessage = "Could not access saved directory"
+                        statusMessage = "Could not access saved icon file"
                     }
                 } else {
-                    statusMessage = "Saved directory bookmark is stale, please reselect"
+                    statusMessage = "Saved icon file bookmark is stale, please reselect"
                 }
             } catch {
                 print("Failed to resolve bookmark: \(error)")
-                statusMessage = "Failed to load saved directory"
+                statusMessage = "Failed to load saved icon file"
             }
         }
     }
     
-    private func saveDirectory(_ url: URL) {
+    private func saveIconFile(_ url: URL) {
         do {
             let bookmarkData = try url.bookmarkData(options: .withSecurityScope, includingResourceValuesForKeys: nil, relativeTo: nil)
-            userDefaults.set(bookmarkData, forKey: outputDirectoryKey)
+            userDefaults.set(bookmarkData, forKey: selectedIconFileKey)
         } catch {
             print("Failed to create bookmark: \(error)")
         }
