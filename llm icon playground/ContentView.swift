@@ -29,134 +29,135 @@ struct ContentView: View {
     
     var body: some View {
         NavigationStack{
-            ScrollView{
-                VStack(spacing: 20) {
-                    // Model Selection
-                    if GeminiClient.hasValidAPIKey() {
+            HStack{
+                ScrollView{
+                    VStack(spacing: 20) {
+                        // Model Selection
+                        if GeminiClient.hasValidAPIKey() {
+                            VStack(alignment: .leading, spacing: 10) {
+                                HStack {
+                                    Text("Model:")
+                                    Spacer()
+                                    Button("Refresh Models") {
+                                        refreshModels()
+                                    }
+                                    .buttonStyle(.borderless)
+                                    .font(.caption)
+                                }
+                                
+                                Picker("Model", selection: $selectedModel) {
+                                    ForEach(availableModels, id: \.self) { model in
+                                        Text(model).tag(model)
+                                    }
+                                }
+                                .pickerStyle(.menu)
+                            }
+                        }
+                        
+                        Divider()
+                        
+                        HStack{
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text("Icon Description:")
+                                TextField("Describe your icon (e.g., 'Coffee app with steam')", text: $iconDescription, axis: .vertical)
+                                    .textFieldStyle(.roundedBorder)
+                                    .lineLimit(3...6)
+                            }
+                        }
+                        
                         VStack(alignment: .leading, spacing: 10) {
+                            Text("Output Directory:")
                             HStack {
-                                Text("Model:")
+                                Text(outputDirectory?.lastPathComponent ?? "No directory selected")
+                                    .foregroundColor(.secondary)
                                 Spacer()
-                                Button("Refresh Models") {
-                                    refreshModels()
-                                }
-                                .buttonStyle(.borderless)
-                                .font(.caption)
-                            }
-                            
-                            Picker("Model", selection: $selectedModel) {
-                                ForEach(availableModels, id: \.self) { model in
-                                    Text(model).tag(model)
+                                Button("Choose...") {
+                                    showingDirectoryPicker = true
                                 }
                             }
-                            .pickerStyle(.menu)
                         }
+                        
+                        if isGenerating {
+                            HStack {
+                                ProgressView()
+                                    .scaleEffect(0.8)
+                                Text("Generating icon...")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        
+                        Spacer()
                     }
-                    
-                    Divider()
-                    
-                    // Icon Generation Section
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("Icon Description:")
-                        TextField("Describe your icon (e.g., 'Coffee app with steam')", text: $iconDescription, axis: .vertical)
-                            .textFieldStyle(.roundedBorder)
-                            .lineLimit(3...6)
-                    }
-                    
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("Icon Name:")
-                        TextField(iconDescription.isEmpty ? "Enter Icon name" : iconDescription, text: $iconName)
-                            .textFieldStyle(.roundedBorder)
-                    }
-                    
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("Output Directory:")
-                        HStack {
-                            Text(outputDirectory?.lastPathComponent ?? "No directory selected")
-                                .foregroundColor(.secondary)
-                            Spacer()
-                            Button("Choose...") {
-                                showingDirectoryPicker = true
+                    .padding()
+                    .onAppear {
+                        loadSavedDirectory()
+                        if GeminiClient.hasValidAPIKey() {
+                            refreshModels()
+                        }
+                        
+                        // Listen for structured output fallback notifications
+                        NotificationCenter.default.addObserver(
+                            forName: Notification.Name("StructuredOutputFallback"),
+                            object: nil,
+                            queue: .main
+                        ) { notification in
+                            if let error = notification.object as? GeminiError,
+                               let details = error.fallbackDetails {
+                                fallbackAlertTitle = "Fallback to Unstructured Mode"
+                                fallbackAlertMessage = details
+                                showingFallbackAlert = true
                             }
                         }
                     }
-                    
-                    if !statusMessage.isEmpty {
-                        Text(statusMessage)
-                            .foregroundColor(statusMessage.contains("Error") ? .red : .green)
-                            .padding()
-                            .background(Color.gray.opacity(0.1))
-                            .cornerRadius(8)
-                    }
-                    
-                    if isGenerating {
-                        HStack {
-                            ProgressView()
-                                .scaleEffect(0.8)
-                            Text("Generating icon...")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                    
-                    Spacer()
-                }
-                .padding()
-                .onAppear {
-                    loadSavedDirectory()
-                    if GeminiClient.hasValidAPIKey() {
-                        refreshModels()
-                    }
-                    
-                    // Listen for structured output fallback notifications
-                    NotificationCenter.default.addObserver(
-                        forName: Notification.Name("StructuredOutputFallback"),
-                        object: nil,
-                        queue: .main
-                    ) { notification in
-                        if let error = notification.object as? GeminiError,
-                           let details = error.fallbackDetails {
-                            fallbackAlertTitle = "Fallback to Unstructured Mode"
-                            fallbackAlertMessage = details
-                            showingFallbackAlert = true
-                        }
-                    }
-                }
-                .fileImporter(
-                    isPresented: $showingDirectoryPicker,
-                    allowedContentTypes: [.folder],
-                    allowsMultipleSelection: false
-                ) { result in
-                    switch result {
-                    case .success(let urls):
-                        if let url = urls.first {
-                            // Stop previous resource access if any
-                            if isAccessingSecurityScopedResource, let currentDir = outputDirectory {
-                                currentDir.stopAccessingSecurityScopedResource()
+                    .fileImporter(
+                        isPresented: $showingDirectoryPicker,
+                        allowedContentTypes: [.folder],
+                        allowsMultipleSelection: false
+                    ) { result in
+                        switch result {
+                        case .success(let urls):
+                            if let url = urls.first {
+                                // Stop previous resource access if any
+                                if isAccessingSecurityScopedResource, let currentDir = outputDirectory {
+                                    currentDir.stopAccessingSecurityScopedResource()
+                                }
+                                
+                                // Start accessing security-scoped resource
+                                if url.startAccessingSecurityScopedResource() {
+                                    outputDirectory = url
+                                    isAccessingSecurityScopedResource = true
+                                    saveDirectory(url)
+                                    statusMessage = "Directory selected: \(url.lastPathComponent)"
+                                } else {
+                                    statusMessage = "Failed to access selected directory"
+                                }
                             }
-                            
-                            // Start accessing security-scoped resource
-                            if url.startAccessingSecurityScopedResource() {
-                                outputDirectory = url
-                                isAccessingSecurityScopedResource = true
-                                saveDirectory(url)
-                                statusMessage = "Directory selected: \(url.lastPathComponent)"
-                            } else {
-                                statusMessage = "Failed to access selected directory"
-                            }
+                        case .failure(let error):
+                            statusMessage = "Error selecting directory: \(error.localizedDescription)"
                         }
-                    case .failure(let error):
-                        statusMessage = "Error selecting directory: \(error.localizedDescription)"
+                    }
+                    .alert(fallbackAlertTitle, isPresented: $showingFallbackAlert) {
+                        Button("OK") { }
+                    } message: {
+                        Text(fallbackAlertMessage)
                     }
                 }
-                .alert(fallbackAlertTitle, isPresented: $showingFallbackAlert) {
-                    Button("OK") { }
-                } message: {
-                    Text(fallbackAlertMessage)
-                }
+                
+                Color.clear
+                    .overlay {
+                        Text("Preview")
+                    }
             }
             .navigationTitle("Icon Experiment")
             .toolbar {
+                ToolbarItem(placement: .status) {
+                    if !statusMessage.isEmpty {
+                        Text(statusMessage)
+                            .foregroundColor(statusMessage.contains("Error") ? .red : .green)
+                    }
+                }
+                .sharedBackgroundVisibility(.hidden)
                 ToolbarItem(placement: .confirmationAction) {
                     let hasKey = GeminiClient.hasValidAPIKey()
                     Button(hasKey ? "Change API Key" : "Set API Key", systemImage: hasKey ? "key.fill" : "key.slash.fill") {
@@ -333,7 +334,6 @@ struct ContentView: View {
                     if url.startAccessingSecurityScopedResource() {
                         outputDirectory = url
                         isAccessingSecurityScopedResource = true
-                        statusMessage = "Using saved directory: \(url.lastPathComponent)"
                     } else {
                         statusMessage = "Could not access saved directory"
                     }
