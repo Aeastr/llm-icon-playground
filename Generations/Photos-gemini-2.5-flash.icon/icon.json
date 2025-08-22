@@ -1,0 +1,134 @@
+{
+  "fill" : {
+    "solid" : "extended-srgb:0.95,0.95,0.95,1.0"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,1.0,1.0,1.0"
+          },
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "Center White",
+          "position" : {
+            "scale" : 0.25,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.6,0.2,1.0,1.0"
+          },
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "Purple Petal",
+          "position" : {
+            "scale" : 0.5,
+            "translation-in-points" : [
+              0,
+              -200
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.2,0.5,1.0,1.0"
+          },
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "Blue Petal",
+          "position" : {
+            "scale" : 0.5,
+            "translation-in-points" : [
+              0,
+              200
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.2,0.8,0.2,1.0"
+          },
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "Green Petal",
+          "position" : {
+            "scale" : 0.5,
+            "translation-in-points" : [
+              -150,
+              -150
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,0.85,0.0,1.0"
+          },
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "Yellow Petal",
+          "position" : {
+            "scale" : 0.5,
+            "translation-in-points" : [
+              -150,
+              150
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,0.6,0.2,1.0"
+          },
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "Orange Petal",
+          "position" : {
+            "scale" : 0.5,
+            "translation-in-points" : [
+              150,
+              150
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,0.23,0.23,1.0"
+          },
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "Red Petal",
+          "position" : {
+            "scale" : 0.5,
+            "translation-in-points" : [
+              150,
+              -150
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,1.0,1.0,1.0"
+          },
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "Main White Disc",
+          "position" : {
+            "scale" : 0.8,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "lighting" : "combined",
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.3
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}

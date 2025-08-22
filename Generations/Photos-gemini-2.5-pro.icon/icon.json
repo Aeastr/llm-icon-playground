@@ -1,0 +1,130 @@
+{
+  "fill" : {
+    "solid" : "extended-srgb:1.0,1.0,1.0,1.0"
+  },
+  "groups" : [
+    {
+      "blend-mode" : "multiply",
+      "layers" : [
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,0.23,0.19,1.0"
+          },
+          "image-name" : "1024x512pxRoundedRectangle40px.svg",
+          "name" : "Petal Red",
+          "position" : {
+            "scale" : 0.3,
+            "translation-in-points" : [
+              85,
+              85
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,0.58,0.0,1.0"
+          },
+          "image-name" : "1024x512pxRoundedRectangle40px.svg",
+          "name" : "Petal Orange",
+          "position" : {
+            "scale" : 0.3,
+            "translation-in-points" : [
+              120,
+              0
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,0.8,0.0,1.0"
+          },
+          "image-name" : "1024x512pxRoundedRectangle40px.svg",
+          "name" : "Petal Yellow",
+          "position" : {
+            "scale" : 0.3,
+            "translation-in-points" : [
+              85,
+              -85
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.3,0.85,0.37,1.0"
+          },
+          "image-name" : "1024x512pxRoundedRectangle40px.svg",
+          "name" : "Petal Green",
+          "position" : {
+            "scale" : 0.3,
+            "translation-in-points" : [
+              0,
+              -120
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.35,0.78,0.98,1.0"
+          },
+          "image-name" : "1024x512pxRoundedRectangle40px.svg",
+          "name" : "Petal Light Blue",
+          "position" : {
+            "scale" : 0.3,
+            "translation-in-points" : [
+              -85,
+              -85
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.0,0.48,1.0,1.0"
+          },
+          "image-name" : "1024x512pxRoundedRectangle40px.svg",
+          "name" : "Petal Dark Blue",
+          "position" : {
+            "scale" : 0.3,
+            "translation-in-points" : [
+              -120,
+              0
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.69,0.32,0.87,1.0"
+          },
+          "image-name" : "1024x512pxRoundedRectangle40px.svg",
+          "name" : "Petal Purple",
+          "position" : {
+            "scale" : 0.3,
+            "translation-in-points" : [
+              -85,
+              85
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,0.18,0.33,1.0"
+          },
+          "image-name" : "1024x512pxRoundedRectangle40px.svg",
+          "name" : "Petal Pink",
+          "position" : {
+            "scale" : 0.3,
+            "translation-in-points" : [
+              0,
+              120
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}
