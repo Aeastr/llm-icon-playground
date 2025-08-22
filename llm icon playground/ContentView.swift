@@ -19,6 +19,7 @@ struct ContentView: View {
     @State private var isGenerating = false
     @State private var showingAPIKeyField = false
     @AppStorage("selectedModel") var selectedModel = "gemini-2.5-flash"
+    @AppStorage("useModelFolder") var useModelFolder = false
     @State private var availableModels: [String] = GeminiClient.commonModels
     @State private var showingFallbackAlert = false
     @State private var fallbackAlertTitle = ""
@@ -84,6 +85,9 @@ struct ContentView: View {
                                     showingDirectoryPicker = true
                                 }
                             }
+                            
+                            Toggle("Use model folders", isOn: $useModelFolder)
+                                .help("Creates a subfolder named after the model (e.g., gemini-2.5-flash)")
                         }
                     }
                     .padding()
@@ -225,7 +229,8 @@ struct ContentView: View {
             try IconGenerator.createIconFile(
                 iconData: testIcon,
                 outputDirectory: outputDir,
-                iconName: fileNameWithModel()
+                iconName: fileNameWithModel(),
+                useModelFolder: useModelFolder
             )
             statusMessage = "Icon generated successfully!"
         } catch {
@@ -298,7 +303,8 @@ struct ContentView: View {
                             iconData: iconFile,
                             outputDirectory: outputDir,
                             iconName: self.fileNameWithModel(),
-                            generationInfo: generationInfo
+                            generationInfo: generationInfo,
+                            useModelFolder: self.useModelFolder
                         )
                         self.statusMessage = "AI icon generated successfully! 🎉"
                     } catch {

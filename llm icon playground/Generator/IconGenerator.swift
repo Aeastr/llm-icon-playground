@@ -55,11 +55,28 @@ class IconGenerator {
         iconData: IconFile,
         outputDirectory: URL,
         iconName: String,
-        generationInfo: GenerationInfo? = nil
+        generationInfo: GenerationInfo? = nil,
+        useModelFolder: Bool = false
     ) throws {
         
+        // Determine the final output directory
+        let finalOutputDirectory: URL
+        if useModelFolder, let generationInfo = generationInfo {
+            let modelFolderName = generationInfo.model.replacingOccurrences(of: " ", with: "-")
+            finalOutputDirectory = outputDirectory.appendingPathComponent(modelFolderName)
+            
+            // Create model folder if it doesn't exist
+            try FileManager.default.createDirectory(
+                at: finalOutputDirectory,
+                withIntermediateDirectories: true,
+                attributes: nil
+            )
+        } else {
+            finalOutputDirectory = outputDirectory
+        }
+        
         // Create .icon directory
-        let iconDirectory = outputDirectory.appendingPathComponent("\(iconName).icon")
+        let iconDirectory = finalOutputDirectory.appendingPathComponent("\(iconName).icon")
         let assetsDirectory = iconDirectory.appendingPathComponent("Assets")
         
         do {
