@@ -4,7 +4,7 @@
 ```json
 {
   "fill": {
-    "automatic-gradient": "extended-srgb:0.0,0.5,1.0,1.0"
+    "solid": "extended-srgb:0.0,0.5,1.0,1.0"
   },
   "groups": [
     {

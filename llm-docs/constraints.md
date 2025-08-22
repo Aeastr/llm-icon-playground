@@ -6,7 +6,7 @@
 - **Canvas size**: 1024x1024px
 
 ## Value Ranges
-- **Scale**: 0.1 to 3.0
+- **Scale**: 0.01 to 5.0 (allows tiny details and large elements)
 - **Translation**: -512 to 512 (keep within canvas bounds)
 - **Blur material**: 0.0 to 1.0
 - **Opacity**: 0.0 to 1.0
@@ -52,7 +52,9 @@ Always use:
 }
 ```
 
-## Asset Limitations
-- **Cannot create custom shapes**: Must use only the assets listed in assets.md
+## Important Rules
+- **Background required**: Include either "fill" or "fill-specializations" at root level for background
+- **Layer stacking order**: In layers array, first item = front (visible on top), last item = back
+- **Cannot create custom shapes**: Must use only the assets listed in assets.md  
 - **Cannot use SF Symbols**: SF Symbol support not yet available
 - **Asset creation**: Coming soon - future feature to generate custom assets on demand

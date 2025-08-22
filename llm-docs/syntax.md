@@ -39,17 +39,28 @@
 ```
 
 ## Layers Array
+**IMPORTANT: Layer stacking order**
+- Layers are ordered from FRONT to BACK
+- First layer in array = closest to viewer (top/front)
+- Last layer in array = furthest back (bottom/background)
+
 ```json
 "layers": [
   {
-    "name": "string",
-    "image-name": "filename.png",
-    "position": { ... },
-    "fill": { ... },
-    "hidden": false
+    "name": "foreground-layer",
+    "image-name": "foreground.png"
+  },
+  {
+    "name": "middle-layer", 
+    "image-name": "middle.png"
+  },
+  {
+    "name": "background-layer",
+    "image-name": "background.png"
   }
 ]
 ```
+In this example: foreground is on top, middle is behind foreground, background is behind both.
 
 ## Position Object
 ```json

@@ -158,6 +158,7 @@ extension IconFile {
     ) -> IconFile {
         return IconFile(
             fill: fill,
+            fillSpecializations: nil,
             groups: groups,
             supportedPlatforms: SupportedPlatforms(
                 circles: ["watchOS"],
