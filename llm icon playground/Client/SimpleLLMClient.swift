@@ -146,12 +146,13 @@ class SimpleLLMClient {
         currentToolsManager = IconToolsManager(iconFileURL: iconFileURL, chatLogger: chatLogger)
         currentTools = createToolDefinitions()
         
+        // ALWAYS add user message to chat log first, before any API calls
         chatLogger?.addUserMessage(userMessage)
         print("💬 Chat started")
         
         let systemPrompt = PromptBuilder.buildStartingPrompt()
         
-        // Initialize conversation history
+        // Initialize conversation history immediately
         let combinedPrompt = """
         \(systemPrompt)
         
@@ -174,10 +175,8 @@ class SimpleLLMClient {
             return
         }
         
+        // ALWAYS add user message to chat log and history first, before any API calls
         currentChatLogger?.addUserMessage(userMessage)
-        // No system message for continuing - keep it clean
-        
-        // Add user message to conversation history
         currentConversationHistory.append(
             LLMRequest.Content(parts: [
                 LLMRequest.Content.Part(text: userMessage, functionCall: nil, functionResponse: nil)
@@ -263,8 +262,8 @@ class SimpleLLMClient {
                     return
                 }
                 
+                // IMMEDIATELY update conversation history with the response
                 var updatedHistory = conversationHistory
-                // Convert response content to request content format
                 let responseContent = LLMRequest.Content(
                     parts: candidate.content.parts.map { responsePart in
                         LLMRequest.Content.Part(
@@ -276,6 +275,7 @@ class SimpleLLMClient {
                     role: "model"
                 )
                 updatedHistory.append(responseContent)
+                self.currentConversationHistory = updatedHistory
                 
                 // Check if there are function calls to execute
                 let functionCalls = candidate.content.parts.compactMap { $0.functionCall }
@@ -313,10 +313,8 @@ class SimpleLLMClient {
                         }
                     }
                     
-                    // Add function responses and continue
+                    // IMMEDIATELY add function responses to history
                     updatedHistory.append(LLMRequest.Content(parts: functionResponses, role: "function"))
-                    
-                    // Update current conversation history before continuing recursively
                     self.currentConversationHistory = updatedHistory
                     
                     self.continueConversation(
@@ -324,36 +322,24 @@ class SimpleLLMClient {
                         tools: tools,
                         toolsManager: toolsManager,
                         chatLogger: chatLogger,
-                        completion: { result in
-                            // When the recursive call completes, ensure we have the final history
-                            switch result {
-                            case .success(_):
-                                // History is already updated in the recursive call
-                                completion(result)
-                            case .failure(_):
-                                completion(result)
-                            }
-                        }
+                        completion: completion
                     )
                 } else {
-                    // No more function calls, return final response
+                    // No more function calls, add final response to chat log
                     let finalText = candidate.content.parts.compactMap { $0.text }.joined(separator: " ")
                     print("🏁 LLM finished with final text (\(finalText.count) chars): '\(finalText.prefix(100))...'")
                     
                     if !finalText.isEmpty {
                         chatLogger?.addAssistantMessage(finalText)
-                        // Update conversation history with final response
-                        self.currentConversationHistory = updatedHistory
                         completion(.success(finalText))
                     } else {
                         print("⚠️ LLM returned empty final text - treating as conversation completion")
-                        // Even if empty, update history and complete conversation so it can continue
-                        self.currentConversationHistory = updatedHistory
                         completion(.success(""))
                     }
                 }
                 
             case .failure(let error):
+                // Even on failure, conversation history is preserved
                 completion(.failure(error))
             }
         }
