@@ -1,4 +1,4 @@
-please ignore the disgusting UI, for now
+please ignore the disgusting UI, for now, and yes it made it's own icon
 
 # LLM Icon Playground
 
