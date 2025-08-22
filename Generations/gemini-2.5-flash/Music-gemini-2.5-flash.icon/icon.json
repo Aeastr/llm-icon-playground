@@ -1,0 +1,64 @@
+{
+  "fill" : {
+    "automatic-gradient" : "extended-srgb:0.80000,0.70000,0.60000,1.00000"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.8,0.8,0.8,1.0"
+          },
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "Note Head Top",
+          "position" : {
+            "scale" : 0.1,
+            "translation-in-points" : [
+              -330,
+              -91.6
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.8,0.8,0.8,1.0"
+          },
+          "image-name" : "64x1024pxRectangle.svg",
+          "name" : "Note Stem",
+          "position" : {
+            "scale" : 0.3,
+            "translation-in-points" : [
+              -330,
+              -245.2
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.8,0.8,0.8,1.0"
+          },
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "Note Head Bottom",
+          "position" : {
+            "scale" : 0.1,
+            "translation-in-points" : [
+              -350,
+              -400
+            ]
+          }
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "specular" : true
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}

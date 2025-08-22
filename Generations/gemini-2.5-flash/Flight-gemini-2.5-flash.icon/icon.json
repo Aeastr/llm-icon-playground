@@ -1,0 +1,64 @@
+{
+  "fill" : {
+    "solid" : "extended-srgb:0.53,0.81,0.98,1.0"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,1.0,1.0,0.8"
+          },
+          "image-name" : "1024x64pxRectangle.svg",
+          "name" : "Contrail 1",
+          "position" : {
+            "scale" : 0.25,
+            "translation-in-points" : [
+              100,
+              -50
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,1.0,1.0,0.8"
+          },
+          "image-name" : "1024x64pxRectangle.svg",
+          "name" : "Contrail 2",
+          "position" : {
+            "scale" : 0.25,
+            "translation-in-points" : [
+              100,
+              50
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,1.0,1.0,1.0"
+          },
+          "image-name" : "1024x1024pxTriangle.svg",
+          "name" : "Airplane",
+          "position" : {
+            "scale" : 0.4,
+            "translation-in-points" : [
+              -100,
+              0
+            ]
+          }
+        }
+      ],
+      "lighting" : "combined",
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.3
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "fill" : {
+    "solid" : "extended-srgb:0.6,0.8,1.0,1.0"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,1.0,1.0,1.0"
+          },
+          "image-name" : "1024x512pxEllipse.svg",
+          "name" : "Cloud",
+          "position" : {
+            "scale" : 0.7,
+            "translation-in-points" : [
+              200,
+              50
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,0.8,0.0,1.0"
+          },
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "Sun",
+          "position" : {
+            "scale" : 0.6,
+            "translation-in-points" : [
+              200,
+              200
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}
