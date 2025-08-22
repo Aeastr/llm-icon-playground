@@ -20,6 +20,7 @@ struct ChatMessage: Identifiable, Equatable {
         case system
         case error
         case debug
+        case toolCall(name: String, result: String)
     }
     
     static func user(_ content: String) -> ChatMessage {
@@ -40,6 +41,10 @@ struct ChatMessage: Identifiable, Equatable {
     
     static func debug(_ content: String) -> ChatMessage {
         ChatMessage(content: content, type: .debug, timestamp: Date())
+    }
+    
+    static func toolCall(name: String, result: String) -> ChatMessage {
+        ChatMessage(content: "Called \(name)", type: .toolCall(name: name, result: result), timestamp: Date())
     }
 }
 
@@ -71,16 +76,35 @@ class ChatLogger {
         addMessage(.debug(content))
     }
     
+    func addToolCallMessage(name: String, result: String) {
+        addMessage(.toolCall(name: name, result: result))
+    }
+    
     func clear() {
         messages.removeAll()
     }
     
     func copyConversationToClipboard() {
         let conversationText = messages
-            .filter { $0.type == .user || $0.type == .assistant }
+            .filter { 
+                switch $0.type {
+                case .user, .assistant:
+                    return true
+                case .toolCall:
+                    return true
+                default:
+                    return false
+                }
+            }
             .map { message in
                 let timestamp = DateFormatter().string(from: message.timestamp)
-                return "\(message.type.displayName) \(timestamp)\n\n\(message.content)\n\n"
+                let content: String
+                if case .toolCall(let name, let result) = message.type {
+                    content = "Called \(name)\nResult: \(result)"
+                } else {
+                    content = message.content
+                }
+                return "\(message.type.displayName) \(timestamp)\n\n\(content)\n\n"
             }
             .joined(separator: "")
         
@@ -103,6 +127,8 @@ extension ChatMessage.MessageType {
             return .red
         case .debug:
             return .gray
+        case .toolCall:
+            return .purple
         }
     }
     
@@ -118,6 +144,21 @@ extension ChatMessage.MessageType {
             return "Error"
         case .debug:
             return "Debug"
+        case .toolCall(let name, _):
+            return "🔧 \(name)"
+        }
+    }
+}
+
+extension ChatMessage.MessageType: Equatable {
+    static func == (lhs: ChatMessage.MessageType, rhs: ChatMessage.MessageType) -> Bool {
+        switch (lhs, rhs) {
+        case (.user, .user), (.assistant, .assistant), (.system, .system), (.error, .error), (.debug, .debug):
+            return true
+        case (.toolCall(let name1, let result1), .toolCall(let name2, let result2)):
+            return name1 == name2 && result1 == result2
+        default:
+            return false
         }
     }
 }

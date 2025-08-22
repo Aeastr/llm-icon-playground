@@ -38,9 +38,9 @@ class PromptBuilder {
         You are chatting with a user about their icon file. You have access to these tools to examine the icon:
         
         - readIconConfig: Get overview of the icon (background, group count, etc.)
-        - readGroups: List all groups in the icon  
+        - readIconGroups: List all groups in the icon  
         - readLayers(groupIndex): List layers in a specific group
-        - getGroupDetails(groupIndex): Get detailed info about a group
+        - getIconGroupDetails(groupIndex): Get detailed info about a group
         - getLayerDetails(groupIndex, layerIndex): Get detailed info about a layer
         
         When the user asks you to examine the icon or asks questions about it, use the tools to get the information and respond directly.
@@ -138,7 +138,7 @@ extension PromptBuilder {
 //        // Check layer count per group
 //        for (index, group) in iconFile.groups.enumerated() {
 //            if group.layers.count > 8 {
-//                errors.append("Group \(index) has too many layers: \(group.layers.count) (max 8)")
+//                errors.append("IconGroup \(index) has too many layers: \(group.layers.count) (max 8)")
 //            }
 //        }
         

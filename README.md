@@ -35,7 +35,7 @@ This is a small experiment to see if we can get LLMs to understand and generate 
 - [**Overview**](docs/icon-format-overview.md) - What the .icon format is and how it works
 - [**Structure**](docs/icon-format-structure.md) - File organization and JSON schema  
 - [**Layer Properties**](docs/layer-properties.md) - Layer-specific properties and effects
-- [**Group Properties**](docs/group-properties.md) - Group-level effects and positioning
+- [**IconGroup Properties**](docs/group-properties.md) - IconGroup-level effects and positioning
 - [**Specializations**](docs/specializations.md) - Appearance and device variations
 - [**Platform Support**](docs/platform-support.md) - Platform targeting and form factors
 

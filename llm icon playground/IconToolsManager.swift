@@ -22,8 +22,8 @@ struct IconToolsManager {
                 let config = try IconAnalysisTools.readIconConfig(iconFileURL: iconFileURL)
                 result = config.description
                 
-            case "readGroups":
-                let groups = try IconAnalysisTools.readGroups(iconFileURL: iconFileURL)
+            case "readIconGroups":
+                let groups = try IconAnalysisTools.readIconGroups(iconFileURL: iconFileURL)
                 result = groups.isEmpty ? "No groups found" : groups.joined(separator: "\n")
                 
             case "readLayers":
@@ -44,19 +44,19 @@ struct IconToolsManager {
                 let layerDetails = try IconAnalysisTools.getLayerDetails(iconFileURL: iconFileURL, groupIndex: groupIndex, layerIndex: layerIndex)
                 result = layerDetails.description
                 
-            case "getGroupDetails":
+            case "getIconGroupDetails":
                 guard let groupIndexStr = toolCall.parameters["groupIndex"] as? String,
                       let groupIndex = Int(groupIndexStr) else {
                     throw ToolError.invalidParameters("groupIndex must be a valid integer")
                 }
-                let groupDetails = try IconAnalysisTools.getGroupDetails(iconFileURL: iconFileURL, groupIndex: groupIndex)
+                let groupDetails = try IconAnalysisTools.getIconGroupDetails(iconFileURL: iconFileURL, groupIndex: groupIndex)
                 result = groupDetails.description
                 
             default:
                 throw ToolError.unknownTool(toolCall.name)
             }
             
-            chatLogger?.addSystemMessage("✅ Tool \(toolCall.name) returned: \(String(result.prefix(300)))\(result.count > 300 ? "..." : "")")
+            chatLogger?.addToolCallMessage(name: toolCall.name, result: result)
             return ToolResult.success(result)
             
         } catch {
@@ -74,7 +74,7 @@ struct IconToolsManager {
                 parameters: [:]
             ),
             ToolDefinition(
-                name: "readGroups",
+                name: "readIconGroups",
                 description: "List all groups in the icon with their indices and names",
                 parameters: [:]
             ),
@@ -94,7 +94,7 @@ struct IconToolsManager {
                 ]
             ),
             ToolDefinition(
-                name: "getGroupDetails",
+                name: "getIconGroupDetails",
                 description: "Get detailed information about a specific group",
                 parameters: [
                     "groupIndex": ParameterDefinition(type: "string", description: "The index of the group to examine")

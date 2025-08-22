@@ -99,7 +99,7 @@ struct NewIconSheet: View {
                 solid: nil
             ),
             groups: [
-                Group.simple(layers: [
+                IconGroup.simple(layers: [
                     Layer.simple(
                         name: "Background",
                         imageName: "1024x1024pxRoundedRectangle100px.svg",

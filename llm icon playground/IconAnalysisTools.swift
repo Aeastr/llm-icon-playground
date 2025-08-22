@@ -22,11 +22,11 @@ struct IconAnalysisTools {
         return iconFile
     }
     
-    static func readGroups(iconFileURL: URL) throws -> [String] {
+    static func readIconGroups(iconFileURL: URL) throws -> [String] {
         let iconFile = try readJsonConfig(iconFileURL: iconFileURL)
         
         return iconFile.groups.enumerated().map { index, group in
-            return "\(index): Group \(index + 1) (\(group.layers.count) layers)"
+            return "\(index): IconGroup \(index + 1) (\(group.layers.count) layers)"
         }
     }
     
@@ -81,7 +81,7 @@ struct IconAnalysisTools {
         )
     }
     
-    static func getGroupDetails(iconFileURL: URL, groupIndex: Int) throws -> GroupSummary {
+    static func getIconGroupDetails(iconFileURL: URL, groupIndex: Int) throws -> IconGroupSummary {
         let iconFile = try readJsonConfig(iconFileURL: iconFileURL)
         
         guard groupIndex >= 0 && groupIndex < iconFile.groups.count else {
@@ -90,8 +90,8 @@ struct IconAnalysisTools {
         
         let group = iconFile.groups[groupIndex]
         
-        return GroupSummary(
-            name: "Group \(groupIndex + 1)",
+        return IconGroupSummary(
+            name: "IconGroup \(groupIndex + 1)",
             layerCount: group.layers.count,
             position: group.position?.description ?? "Default position",
             shadow: group.shadow?.description ?? "No shadow",
@@ -113,7 +113,7 @@ struct IconConfigSummary {
     var description: String {
         return """
         Background: \(backgroundFill)
-        Groups: \(groupCount)
+        IconGroups: \(groupCount)
         Total Layers: \(totalLayers)
         Has Specializations: \(hasSpecializations)
         """
@@ -138,7 +138,7 @@ struct LayerSummary {
     }
 }
 
-struct GroupSummary {
+struct IconGroupSummary {
     let name: String
     let layerCount: Int
     let position: String
@@ -171,7 +171,7 @@ enum IconAnalysisError: LocalizedError {
         case .iconJsonNotFound:
             return "icon.json file not found in the selected .icon bundle"
         case .groupNotFound(let index):
-            return "Group at index \(index) not found"
+            return "IconGroup at index \(index) not found"
         case .layerNotFound(let index):
             return "Layer at index \(index) not found"
         case .invalidIconStructure:

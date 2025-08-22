@@ -359,7 +359,7 @@ class SimpleLLMClient {
                     )
                 ),
                 LLMRequest.FunctionDeclaration(
-                    name: "readGroups",
+                    name: "readIconGroups",
                     description: "List all groups in the icon with their indices and layer counts",
                     parameters: LLMRequest.FunctionParameters(
                         type: "object",
@@ -382,7 +382,7 @@ class SimpleLLMClient {
                     )
                 ),
                 LLMRequest.FunctionDeclaration(
-                    name: "getGroupDetails",
+                    name: "getIconGroupDetails",
                     description: "Get detailed information about a specific group",
                     parameters: LLMRequest.FunctionParameters(
                         type: "object",

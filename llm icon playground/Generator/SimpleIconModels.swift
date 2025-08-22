@@ -11,7 +11,7 @@ import Foundation
 struct IconFile: Codable {
     let fill: Fill?
     let fillSpecializations: [FillSpecialization]?
-    let groups: [Group]
+    let groups: [IconGroup]
     let supportedPlatforms: SupportedPlatforms
     
     enum CodingKeys: String, CodingKey {
@@ -32,8 +32,8 @@ struct Fill: Codable {
     }
 }
 
-// MARK: - Group  
-struct Group: Codable {
+// MARK: - IconGroup  
+struct IconGroup: Codable {
     let layers: [Layer]
     let position: Position?
     let shadow: Shadow?

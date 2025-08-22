@@ -21,7 +21,7 @@
 }
 ```
 
-## Groups Array
+## IconGroups Array
 ```json
 "groups": [
   {

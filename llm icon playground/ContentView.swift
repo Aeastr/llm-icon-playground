@@ -111,6 +111,11 @@ struct ContentView: View {
                             TextField("Describe your changes.", text: $iconDescription, axis: .vertical)
                                 .textFieldStyle(.roundedBorder)
                                 .lineLimit(3...6)
+                                .onSubmit {
+                                    if canGenerateIcon() && !isGenerating {
+                                        generateAIIcon()
+                                    }
+                                }
                             
                             
                             // Model Selection
@@ -204,16 +209,17 @@ struct ContentView: View {
         
         guard let client = llmClient else { return }
         
+        // Capture the message and clear the input immediately
+        let messageToSend = iconDescription
+        iconDescription = ""
         isGenerating = true
         
         if hasActiveConversation {
             // Continue existing conversation
             statusMessage = "Continuing conversation..."
-            chatLogger.addDebugMessage("🔄 Continuing existing conversation")
-            client.continueChat(userMessage: iconDescription) { result in
+            client.continueChat(userMessage: messageToSend) { result in
                 DispatchQueue.main.async {
                     self.isGenerating = false
-                    self.iconDescription = "" // Clear input
                     
                     switch result {
                     case .success(_):
@@ -226,12 +232,10 @@ struct ContentView: View {
         } else {
             // Start new conversation
             statusMessage = "Starting conversation..."
-            chatLogger.addDebugMessage("🆕 Starting new conversation")
-            client.startChatWithIcon(iconFileURL: iconFile, userMessage: iconDescription, chatLogger: chatLogger) { result in
+            client.startChatWithIcon(iconFileURL: iconFile, userMessage: messageToSend, chatLogger: chatLogger) { result in
                 DispatchQueue.main.async {
                     self.isGenerating = false
                     self.hasActiveConversation = true
-                    self.iconDescription = "" // Clear input
                     
                     switch result {
                     case .success(_):

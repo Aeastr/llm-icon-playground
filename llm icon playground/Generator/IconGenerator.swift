@@ -208,7 +208,7 @@ extension IconFile {
     /// Creates a simple icon with default platform support
     static func simple(
         fill: Fill? = nil,
-        groups: [Group]
+        groups: [IconGroup]
     ) -> IconFile {
         return IconFile(
             fill: fill,
@@ -222,11 +222,11 @@ extension IconFile {
     }
 }
 
-extension Group {
+extension IconGroup {
     
     /// Creates a simple group with just layers
-    static func simple(layers: [Layer]) -> Group {
-        return Group(
+    static func simple(layers: [Layer]) -> IconGroup {
+        return IconGroup(
             layers: layers,
             position: nil,
             shadow: nil,
