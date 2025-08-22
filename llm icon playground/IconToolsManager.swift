@@ -12,7 +12,7 @@ struct IconToolsManager {
     let chatLogger: ChatLogger?
     
     func executeToolCall(_ toolCall: ToolCall) -> ToolResult {
-        chatLogger?.addDebugMessage("🔧 Executing tool: \(toolCall.name)")
+        chatLogger?.addDebugMessage("🔧 LLM called tool: \(toolCall.name) with parameters: \(toolCall.parameters)")
         
         do {
             let result: String
@@ -56,7 +56,7 @@ struct IconToolsManager {
                 throw ToolError.unknownTool(toolCall.name)
             }
             
-            chatLogger?.addSystemMessage("✅ Tool result: \(String(result.prefix(200)))\(result.count > 200 ? "..." : "")")
+            chatLogger?.addSystemMessage("✅ Tool \(toolCall.name) returned: \(String(result.prefix(300)))\(result.count > 300 ? "..." : "")")
             return ToolResult.success(result)
             
         } catch {

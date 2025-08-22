@@ -124,6 +124,12 @@ class SimpleLLMClient {
     private let apiKey: String
     private let selectedModel: String
     
+    // Ongoing conversation state
+    private var currentConversationHistory: [LLMRequest.Content] = []
+    private var currentTools: [LLMRequest.Tool] = []
+    private var currentToolsManager: IconToolsManager?
+    private var currentChatLogger: ChatLogger?
+    
     init(apiKey: String, model: String = "gemini-2.5-flash") {
         self.apiKey = apiKey
         self.selectedModel = model
@@ -133,30 +139,78 @@ class SimpleLLMClient {
         return "https://generativelanguage.googleapis.com/v1beta/models/\(selectedModel):generateContent"
     }
     
-    /// Starts a conversation about an icon file with function calling
-    func analyzeIcon(iconFileURL: URL, userRequest: String, chatLogger: ChatLogger? = nil, completion: @escaping (Result<String, Error>) -> Void) {
-        chatLogger?.addUserMessage(userRequest)
-        chatLogger?.addSystemMessage("🔍 Starting interactive icon analysis...")
+    /// Starts a new chat conversation with access to icon analysis tools
+    func startChatWithIcon(iconFileURL: URL, userMessage: String, chatLogger: ChatLogger? = nil, completion: @escaping (Result<String, Error>) -> Void) {
+        // Initialize conversation state
+        currentChatLogger = chatLogger
+        currentToolsManager = IconToolsManager(iconFileURL: iconFileURL, chatLogger: chatLogger)
+        currentTools = createToolDefinitions()
         
-        let systemPrompt = """
-        \(PromptBuilder.buildStartingPrompt())
+        chatLogger?.addUserMessage(userMessage)
+        chatLogger?.addSystemMessage("💬 Chat started")
         
-        You have access to these tools to examine the icon:
-        - readIconConfig: Get overview of the icon (background, group count, etc.)
-        - readGroups: List all groups in the icon
-        - readLayers(groupIndex): List layers in a specific group
-        - getGroupDetails(groupIndex): Get detailed info about a group
-        - getLayerDetails(groupIndex, layerIndex): Get detailed info about a layer
+        let systemPrompt = PromptBuilder.buildStartingPrompt()
         
-        Start by calling readIconConfig to understand the current structure, then explore as needed based on the user's request.
+        // Initialize conversation history
+        let combinedPrompt = """
+        \(systemPrompt)
+        
+        User Request: \(userMessage)
         """
         
-        startFunctionCallingConversation(
-            iconFileURL: iconFileURL,
-            systemPrompt: systemPrompt,
-            userMessage: userRequest,
-            chatLogger: chatLogger,
-            completion: completion
+        currentConversationHistory = [
+            LLMRequest.Content(parts: [
+                LLMRequest.Content.Part(text: combinedPrompt, functionCall: nil, functionResponse: nil)
+            ], role: "user")
+        ]
+        
+        continueCurrentConversation(completion: completion)
+    }
+    
+    /// Continues the current conversation with a new user message
+    func continueChat(userMessage: String, completion: @escaping (Result<String, Error>) -> Void) {
+        guard currentToolsManager != nil else {
+            completion(.failure(LLMError.apiError("No active conversation. Start a new chat first.")))
+            return
+        }
+        
+        currentChatLogger?.addUserMessage(userMessage)
+        // No system message for continuing - keep it clean
+        
+        // Add user message to conversation history
+        currentConversationHistory.append(
+            LLMRequest.Content(parts: [
+                LLMRequest.Content.Part(text: userMessage, functionCall: nil, functionResponse: nil)
+            ], role: "user")
+        )
+        
+        continueCurrentConversation(completion: completion)
+    }
+    
+    /// Continues the current conversation
+    private func continueCurrentConversation(completion: @escaping (Result<String, Error>) -> Void) {
+        guard let toolsManager = currentToolsManager else {
+            completion(.failure(LLMError.apiError("No active conversation")))
+            return
+        }
+        
+        currentChatLogger?.addDebugMessage("🔄 Continuing conversation with \(currentConversationHistory.count) messages in history")
+        
+        continueConversation(
+            conversationHistory: currentConversationHistory,
+            tools: currentTools,
+            toolsManager: toolsManager,
+            chatLogger: currentChatLogger,
+            completion: { result in
+                switch result {
+                case .success(let text):
+                    self.currentChatLogger?.addDebugMessage("✅ Conversation completed successfully. Final text: '\(text.prefix(100))'")
+                    completion(result)
+                case .failure(let error):
+                    self.currentChatLogger?.addErrorMessage("❌ Conversation failed: \(error.localizedDescription)")
+                    completion(result)
+                }
+            }
         )
     }
     
@@ -171,12 +225,16 @@ class SimpleLLMClient {
         let toolsManager = IconToolsManager(iconFileURL: iconFileURL, chatLogger: chatLogger)
         let tools = createToolDefinitions()
         
+        // Combine system prompt and user message into one message for Gemini
+        let combinedPrompt = """
+        \(systemPrompt)
+        
+        User Request: \(userMessage)
+        """
+        
         var conversationHistory: [LLMRequest.Content] = [
             LLMRequest.Content(parts: [
-                LLMRequest.Content.Part(text: systemPrompt, functionCall: nil, functionResponse: nil)
-            ], role: "user"),
-            LLMRequest.Content(parts: [
-                LLMRequest.Content.Part(text: userMessage, functionCall: nil, functionResponse: nil)
+                LLMRequest.Content.Part(text: combinedPrompt, functionCall: nil, functionResponse: nil)
             ], role: "user")
         ]
         
@@ -221,6 +279,9 @@ class SimpleLLMClient {
                 
                 // Check if there are function calls to execute
                 let functionCalls = candidate.content.parts.compactMap { $0.functionCall }
+                let textParts = candidate.content.parts.compactMap { $0.text }
+                
+                chatLogger?.addDebugMessage("📋 LLM response: \(functionCalls.count) function calls, \(textParts.count) text parts")
                 
                 if !functionCalls.isEmpty {
                     // Execute function calls and continue conversation
@@ -255,17 +316,39 @@ class SimpleLLMClient {
                     // Add function responses and continue
                     updatedHistory.append(LLMRequest.Content(parts: functionResponses, role: "function"))
                     
+                    // Update current conversation history before continuing recursively
+                    self.currentConversationHistory = updatedHistory
+                    
                     self.continueConversation(
                         conversationHistory: updatedHistory,
                         tools: tools,
                         toolsManager: toolsManager,
                         chatLogger: chatLogger,
-                        completion: completion
+                        completion: { result in
+                            // When the recursive call completes, ensure we have the final history
+                            switch result {
+                            case .success(_):
+                                // History is already updated in the recursive call
+                                completion(result)
+                            case .failure(_):
+                                completion(result)
+                            }
+                        }
                     )
                 } else {
                     // No more function calls, return final response
                     let finalText = candidate.content.parts.compactMap { $0.text }.joined(separator: " ")
-                    chatLogger?.addAssistantMessage(finalText)
+                    chatLogger?.addDebugMessage("🏁 LLM finished with final text (\(finalText.count) chars): '\(finalText.prefix(100))...'")
+                    
+                    if !finalText.isEmpty {
+                        chatLogger?.addAssistantMessage(finalText)
+                    } else {
+                        chatLogger?.addDebugMessage("⚠️ LLM returned empty final text")
+                    }
+                    
+                    // Update conversation history with final response
+                    self.currentConversationHistory = updatedHistory
+                    
                     completion(.success(finalText))
                 }
                 

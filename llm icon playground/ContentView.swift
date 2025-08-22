@@ -28,6 +28,8 @@ struct ContentView: View {
     @State private var availableModels: [String] = SimpleLLMClient.commonModels
     @State private var showChat = true
     @State private var chatLogger = ChatLogger()
+    @State private var llmClient: SimpleLLMClient?
+    @State private var hasActiveConversation = false
     private let userDefaults = UserDefaults.standard
     private let selectedIconFileKey = "selectedIconFile"
     
@@ -103,7 +105,7 @@ struct ContentView: View {
                 }
             }
             .inspector(isPresented: $showChat) {
-                ChatView(chatLogger: chatLogger)
+                ChatView(chatLogger: chatLogger, hasActiveConversation: $hasActiveConversation)
                     .safeAreaInset(edge: .bottom) {
                         VStack(spacing: 5){
                             TextField("Describe your changes.", text: $iconDescription, axis: .vertical)
@@ -189,25 +191,55 @@ struct ContentView: View {
     
     private func generateAIIcon() {
         guard let iconFile = selectedIconFile else { return }
-        guard let llmClient = SimpleLLMClient.client(model: selectedModel) else {
-            statusMessage = "Error: No valid API key"
-            return
+        guard !iconDescription.isEmpty else { return }
+        
+        // Initialize client if needed
+        if llmClient == nil {
+            guard let client = SimpleLLMClient.client(model: selectedModel) else {
+                statusMessage = "Error: No valid API key"
+                return
+            }
+            llmClient = client
         }
         
-        isGenerating = true
-        statusMessage = "Analyzing icon..."
+        guard let client = llmClient else { return }
         
-        llmClient.analyzeIcon(iconFileURL: iconFile, userRequest: iconDescription, chatLogger: chatLogger) { result in
-            DispatchQueue.main.async {
-                self.isGenerating = false
-                
-                switch result {
-                case .success(let analysis):
-                    self.statusMessage = "Icon analysis completed! 🎉"
-                    self.chatLogger.addSystemMessage("Analysis complete. Review recommendations in chat log.")
+        isGenerating = true
+        
+        if hasActiveConversation {
+            // Continue existing conversation
+            statusMessage = "Continuing conversation..."
+            chatLogger.addDebugMessage("🔄 Continuing existing conversation")
+            client.continueChat(userMessage: iconDescription) { result in
+                DispatchQueue.main.async {
+                    self.isGenerating = false
+                    self.iconDescription = "" // Clear input
                     
-                case .failure(let error):
-                    self.statusMessage = "Error analyzing icon: \(error.localizedDescription)"
+                    switch result {
+                    case .success(_):
+                        self.statusMessage = "Response received"
+                    case .failure(let error):
+                        self.statusMessage = "Error: \(error.localizedDescription)"
+                    }
+                }
+            }
+        } else {
+            // Start new conversation
+            statusMessage = "Starting conversation..."
+            chatLogger.addDebugMessage("🆕 Starting new conversation")
+            client.startChatWithIcon(iconFileURL: iconFile, userMessage: iconDescription, chatLogger: chatLogger) { result in
+                DispatchQueue.main.async {
+                    self.isGenerating = false
+                    self.hasActiveConversation = true
+                    self.iconDescription = "" // Clear input
+                    
+                    switch result {
+                    case .success(_):
+                        self.statusMessage = "Conversation started"
+                    case .failure(let error):
+                        self.statusMessage = "Error: \(error.localizedDescription)"
+                        self.hasActiveConversation = false
+                    }
                 }
             }
         }

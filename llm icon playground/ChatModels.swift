@@ -74,6 +74,20 @@ class ChatLogger {
     func clear() {
         messages.removeAll()
     }
+    
+    func copyConversationToClipboard() {
+        let conversationText = messages
+            .filter { $0.type == .user || $0.type == .assistant }
+            .map { message in
+                let timestamp = DateFormatter().string(from: message.timestamp)
+                return "\(message.type.displayName) \(timestamp)\n\n\(message.content)\n\n"
+            }
+            .joined(separator: "")
+        
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString(conversationText, forType: .string)
+    }
 }
 
 extension ChatMessage.MessageType {

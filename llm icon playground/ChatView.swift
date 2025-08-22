@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ChatView: View {
     @Bindable var chatLogger: ChatLogger
+    @Binding var hasActiveConversation: Bool
     
     var body: some View {
         VStack(spacing: 0) {
@@ -17,6 +18,19 @@ struct ChatView: View {
                 Text("Chat Log")
                     .font(.headline)
                 Spacer()
+                if hasActiveConversation {
+                    Button("New Chat") {
+                        hasActiveConversation = false
+                        chatLogger.clear()
+                    }
+                    .font(.caption)
+                    .buttonStyle(.borderless)
+                }
+                Button("Copy") {
+                    chatLogger.copyConversationToClipboard()
+                }
+                .font(.caption)
+                .buttonStyle(.borderless)
                 Button("Clear") {
                     chatLogger.clear()
                 }
@@ -93,6 +107,6 @@ struct ChatMessageView: View {
     logger.addErrorMessage("Failed to parse response")
     logger.addDebugMessage("Response length: 1234 characters")
     
-    return ChatView(chatLogger: logger)
+    return ChatView(chatLogger: logger, hasActiveConversation: .constant(true))
         .frame(width: 400, height: 600)
 }
