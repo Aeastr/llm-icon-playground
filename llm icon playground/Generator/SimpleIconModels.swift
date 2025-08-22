@@ -22,9 +22,45 @@ struct IconFile: Codable {
 }
 
 // MARK: - Fill
-struct Fill: Codable {
-    let automaticGradient: String?
-    let solid: String?
+enum Fill: Codable {
+    case solid(String)
+    case automaticGradient(String)
+    case system(String) // For "automatic", "system-light", "system-dark"
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        
+        // Try to decode as a string first (for system colors)
+        if let stringValue = try? container.decode(String.self) {
+            self = .system(stringValue)
+            return
+        }
+        
+        // Try to decode as an object
+        let objectContainer = try decoder.container(keyedBy: CodingKeys.self)
+        
+        if let solid = try objectContainer.decodeIfPresent(String.self, forKey: .solid) {
+            self = .solid(solid)
+        } else if let gradient = try objectContainer.decodeIfPresent(String.self, forKey: .automaticGradient) {
+            self = .automaticGradient(gradient)
+        } else {
+            throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Unknown fill format"))
+        }
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        switch self {
+        case .system(let value):
+            var container = encoder.singleValueContainer()
+            try container.encode(value)
+        case .solid(let value):
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(value, forKey: .solid)
+        case .automaticGradient(let value):
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(value, forKey: .automaticGradient)
+        }
+    }
     
     enum CodingKeys: String, CodingKey {
         case automaticGradient = "automatic-gradient"

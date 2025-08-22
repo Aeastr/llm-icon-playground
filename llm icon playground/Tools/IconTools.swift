@@ -34,22 +34,22 @@ struct IconTools {
             guard let color = color else {
                 throw IconToolError.invalidParameters("Color fills require a 'color' parameter. You provided fillType='color' but no color parameter.")
             }
-            newFill = Fill(automaticGradient: nil, solid: color)
+            newFill = .solid(color)
             
         case "automatic":
-            newFill = Fill(automaticGradient: nil, solid: "automatic")
+            newFill = .system("automatic")
             
         case "system-light":
-            newFill = Fill(automaticGradient: nil, solid: "system-light")
+            newFill = .system("system-light")
             
         case "system-dark":
-            newFill = Fill(automaticGradient: nil, solid: "system-dark")
+            newFill = .system("system-dark")
             
         case "gradient", "automatic-gradient":
             guard let color = color else {
                 throw IconToolError.invalidParameters("Automatic gradient fills require a 'color' parameter for the base color.")
             }
-            newFill = Fill(automaticGradient: color, solid: nil)
+            newFill = .automaticGradient(color)
             
         default:
             throw IconToolError.invalidParameters("Invalid fillType '\(fillType)'. Valid options: 'color'/'solid' (with color), 'automatic', 'system-light', 'system-dark', 'automatic-gradient' (with color). You provided: '\(fillType)'")
@@ -95,22 +95,22 @@ struct IconTools {
             guard let color = color else {
                 throw IconToolError.invalidParameters("Color fills require a 'color' parameter. You provided fillType='color' but no color parameter.")
             }
-            newFill = Fill(automaticGradient: nil, solid: color)
+            newFill = .solid(color)
             
         case "automatic":
-            newFill = Fill(automaticGradient: nil, solid: "automatic")
+            newFill = .system("automatic")
             
         case "system-light":
-            newFill = Fill(automaticGradient: nil, solid: "system-light")
+            newFill = .system("system-light")
             
         case "system-dark":
-            newFill = Fill(automaticGradient: nil, solid: "system-dark")
+            newFill = .system("system-dark")
             
         case "gradient", "automatic-gradient":
             guard let color = color else {
                 throw IconToolError.invalidParameters("Automatic gradient fills require a 'color' parameter for the base color.")
             }
-            newFill = Fill(automaticGradient: color, solid: nil)
+            newFill = .automaticGradient(color)
             
         default:
             throw IconToolError.invalidParameters("Invalid fillType '\(fillType)'. Valid options: 'color'/'solid' (with color), 'automatic', 'system-light', 'system-dark', 'automatic-gradient' (with color). You provided: '\(fillType)'")
