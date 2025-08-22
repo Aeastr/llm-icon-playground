@@ -19,7 +19,7 @@ struct ContentView: View {
     @State private var isGenerating = false
     @State private var showingAPIKeyField = false
     @AppStorage("selectedModel") var selectedModel = "gemini-2.5-flash"
-    @AppStorage("useModelFolder") var useModelFolder = false
+    @AppStorage("useModelFolder") var useModelFolder = true
     @State private var availableModels: [String] = GeminiClient.commonModels
     @State private var showingFallbackAlert = false
     @State private var fallbackAlertTitle = ""

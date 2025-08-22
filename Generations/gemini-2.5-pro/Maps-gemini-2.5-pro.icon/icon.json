@@ -1,0 +1,119 @@
+{
+  "fill" : {
+    "solid" : "extended-srgb:0.1,0.2,0.4,1.0"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,0.2,0.2,1.0"
+          },
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "Pin Head",
+          "position" : {
+            "scale" : 0.08,
+            "translation-in-points" : [
+              80,
+              100
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,0.2,0.2,1.0"
+          },
+          "image-name" : "1024x1024pxDiamond.svg",
+          "name" : "Pin Body",
+          "position" : {
+            "scale" : 0.12,
+            "translation-in-points" : [
+              80,
+              60
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.9,0.4,0.1,1.0"
+          },
+          "image-name" : "1024x64pxRectangle.svg",
+          "name" : "Road Line",
+          "position" : {
+            "scale" : 0.7,
+            "translation-in-points" : [
+              0,
+              80
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.2,0.6,0.9,1.0"
+          },
+          "image-name" : "64x1024pxRectangle.svg",
+          "name" : "River Line",
+          "position" : {
+            "scale" : 0.7,
+            "translation-in-points" : [
+              80,
+              0
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.95,0.93,0.88,1.0"
+          },
+          "image-name" : "512x1024pxRectangle.svg",
+          "name" : "Front Map Panel",
+          "position" : {
+            "scale" : 0.8,
+            "translation-in-points" : [
+              100,
+              0
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.90,0.88,0.83,1.0"
+          },
+          "image-name" : "512x1024pxRectangle.svg",
+          "name" : "Middle Map Panel",
+          "position" : {
+            "scale" : 0.8,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.85,0.83,0.78,1.0"
+          },
+          "image-name" : "512x1024pxRectangle.svg",
+          "name" : "Back Map Panel",
+          "position" : {
+            "scale" : 0.8,
+            "translation-in-points" : [
+              -100,
+              0
+            ]
+          }
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.4
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "fill": {
+    "automaticGradient": "display-p3:0.2,0.4,0.8,1.0"
+  },
+  "groups": [
+    {
+      "layers": [
+        {
+          "name": "Head",
+          "imageName": "1024x1024pxRoundedRectangle100px.svg",
+          "position": {
+            "scale": 0.7,
+            "translationInPoints": [0, 50]
+          },
+          "fill": {
+            "solid": "display-p3:0.85,0.85,0.9,1.0"
+          }
+        },
+        {
+          "name": "Left Eye",
+          "imageName": "1024x1024pxCircle.svg", 
+          "position": {
+            "scale": 0.12,
+            "translationInPoints": [-80, 80]
+          },
+          "fill": {
+            "solid": "display-p3:0.2,0.6,1.0,1.0"
+          }
+        },
+        {
+          "name": "Right Eye",
+          "imageName": "1024x1024pxCircle.svg",
+          "position": {
+            "scale": 0.12,
+            "translationInPoints": [80, 80]
+          },
+          "fill": {
+            "solid": "display-p3:0.2,0.6,1.0,1.0"
+          }
+        },
+        {
+          "name": "Mouth",
+          "imageName": "1024x512pxRoundedRectangle40px.svg",
+          "position": {
+            "scale": 0.15,
+            "translationInPoints": [0, 20]
+          },
+          "fill": {
+            "solid": "display-p3:0.4,0.4,0.4,1.0"
+          }
+        },
+        {
+          "name": "Antenna Base",
+          "imageName": "64x1024pxRectangle.svg",
+          "position": {
+            "scale": 0.08,
+            "translationInPoints": [0, 170]
+          },
+          "fill": {
+            "solid": "display-p3:0.6,0.6,0.6,1.0"
+          }
+        },
+        {
+          "name": "Antenna Light",
+          "imageName": "1024x1024pxCircle.svg",
+          "position": {
+            "scale": 0.06,
+            "translationInPoints": [0, 220]
+          },
+          "fill": {
+            "automaticGradient": "display-p3:1.0,0.3,0.3,1.0"
+          }
+        }
+      ]
+    },
+    {
+      "layers": [
+        {
+          "name": "Body",
+          "imageName": "1024x1024pxRoundedRectangle60px.svg",
+          "position": {
+            "scale": 0.5,
+            "translationInPoints": [0, -120]
+          },
+          "fill": {
+            "solid": "display-p3:0.7,0.7,0.75,1.0"
+          }
+        },
+        {
+          "name": "Chest Panel",
+          "imageName": "1024x1024pxRoundedRectangle60px.svg",
+          "position": {
+            "scale": 0.25,
+            "translationInPoints": [0, -120]
+          },
+          "fill": {
+            "solid": "display-p3:0.3,0.3,0.35,1.0"
+          }
+        },
+        {
+          "name": "Power Button",
+          "imageName": "1024x1024pxCircle.svg",
+          "position": {
+            "scale": 0.04,
+            "translationInPoints": [0, -140]
+          },
+          "fill": {
+            "automaticGradient": "display-p3:0.2,0.8,0.2,1.0"
+          }
+        }
+      ]
+    }
+  ],
+  "supportedPlatforms": {
+    "circles": ["watchOS"],
+    "squares": "shared"
+  }
+}

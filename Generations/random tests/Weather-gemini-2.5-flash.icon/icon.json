@@ -1,0 +1,118 @@
+{
+  "fill" : {
+    "solid" : "extended-srgb:0.5,0.7,0.9,1.0"
+  },
+  "groups" : [
+    {
+      "blur-material" : 0.1,
+      "layers" : [
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,1.0,1.0,1.0"
+          },
+          "image-name" : "1024x1024pxRoundedRectangle100px.svg",
+          "name" : "Cloud Part 1",
+          "position" : {
+            "scale" : 0.4,
+            "translation-in-points" : [
+              -100,
+              0
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,1.0,1.0,1.0"
+          },
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "Cloud Part 2",
+          "position" : {
+            "scale" : 0.45,
+            "translation-in-points" : [
+              0,
+              50
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,1.0,1.0,1.0"
+          },
+          "image-name" : "1024x1024pxRoundedRectangle100px.svg",
+          "name" : "Cloud Part 3",
+          "position" : {
+            "scale" : 0.4,
+            "translation-in-points" : [
+              100,
+              0
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,1.0,1.0,1.0"
+          },
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "Cloud Part 4",
+          "position" : {
+            "scale" : 0.5,
+            "translation-in-points" : [
+              0,
+              -50
+            ]
+          }
+        }
+      ],
+      "position" : {
+        "scale" : 1,
+        "translation-in-points" : [
+          -50,
+          50
+        ]
+      },
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.3
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.9
+      }
+    },
+    {
+      "layers" : [
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,0.8,0.0,1.0"
+          },
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "Sun",
+          "position" : {
+            "scale" : 0.6,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "position" : {
+        "scale" : 1,
+        "translation-in-points" : [
+          150,
+          -150
+        ]
+      },
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}

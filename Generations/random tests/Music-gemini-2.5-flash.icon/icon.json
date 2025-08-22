@@ -1,0 +1,80 @@
+{
+  "fill" : {
+    "solid" : "extended-srgb:0.2,0.0,0.4,1.0"
+  },
+  "groups" : [
+    {
+      "blur-material" : 0.1,
+      "layers" : [
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,1.0,1.0,1.0"
+          },
+          "image-name" : "1024x1024pxTriangle.svg",
+          "name" : "Play Symbol",
+          "position" : {
+            "scale" : 0.4,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,1.0,1.0,0.8"
+          },
+          "image-name" : "1024x64pxRectangle.svg",
+          "name" : "Music Line Top",
+          "position" : {
+            "scale" : 0.3,
+            "translation-in-points" : [
+              0,
+              -100
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,1.0,1.0,0.8"
+          },
+          "image-name" : "1024x64pxRectangle.svg",
+          "name" : "Music Line Bottom",
+          "position" : {
+            "scale" : 0.25,
+            "translation-in-points" : [
+              0,
+              100
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.4,0.1,0.8,1.0"
+          },
+          "image-name" : "1024x1024pxRoundedRectangle100px.svg",
+          "name" : "Main Shape",
+          "position" : {
+            "scale" : 0.8,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "lighting" : "combined",
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "specular" : true
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}
