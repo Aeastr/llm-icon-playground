@@ -184,12 +184,14 @@ enum IconAnalysisError: LocalizedError {
 
 extension Fill {
     var description: String {
-        if let solid = solid {
-            return "Solid: \(solid)"
-        } else if let gradient = automaticGradient {
-            return "Gradient: \(gradient)"
+        switch self {
+        case .solid(let color):
+            return "Solid: \(color)"
+        case .automaticGradient(let color):
+            return "Gradient: \(color)"
+        case .system(let value):
+            return "System: \(value)"
         }
-        return "No fill"
     }
 }
 

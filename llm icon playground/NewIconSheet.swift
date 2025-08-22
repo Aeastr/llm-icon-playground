@@ -94,10 +94,7 @@ struct NewIconSheet: View {
         
         // Create a simple default icon structure
         let defaultIcon = IconFile.simple(
-            fill: Fill(
-                automaticGradient: "display-p3:0.5,0.5,0.5,1.0",
-                solid: nil
-            ),
+            fill: .automaticGradient("display-p3:0.5,0.5,0.5,1.0"),
             groups: [
                 IconGroup.simple(layers: [
                     Layer.simple(
