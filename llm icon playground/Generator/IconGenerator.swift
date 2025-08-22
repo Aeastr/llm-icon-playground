@@ -35,11 +35,13 @@ class IconGenerator {
     ///   - iconData: The icon structure to encode
     ///   - outputDirectory: Directory where the .icon folder should be created
     ///   - iconName: Name for the .icon folder (without .icon extension)
+    ///   - modelInfo: Optional dictionary to write as modelInfo.json alongside icon.json
     /// - Throws: IconGeneratorError
     static func createIconFile(
         iconData: IconFile,
         outputDirectory: URL,
-        iconName: String
+        iconName: String,
+        modelInfo: [String: AnyCodable]? = nil
     ) throws {
         
         // Create .icon directory
@@ -65,6 +67,11 @@ class IconGenerator {
         // Write icon.json
         try writeIconJSON(iconData: iconData, to: iconDirectory)
         
+        // Write modelInfo.json if provided
+        if let modelInfo = modelInfo {
+            try writeModelInfoJSON(modelInfo: modelInfo, to: iconDirectory)
+        }
+        
         // Extract and copy required assets
         let requiredAssets = extractRequiredAssets(from: iconData)
         try copyAssets(assetNames: requiredAssets, to: assetsDirectory)
@@ -79,6 +86,21 @@ class IconGenerator {
         
         do {
             let jsonData = try encoder.encode(iconData)
+            try jsonData.write(to: jsonURL)
+        } catch {
+            throw IconGeneratorError.jsonWriteFailed(error.localizedDescription)
+        }
+    }
+
+    /// Writes the modelInfo.json file
+    private static func writeModelInfoJSON(modelInfo: [String: AnyCodable], to directory: URL) throws {
+        let jsonURL = directory.appendingPathComponent("modelInfo.json")
+        
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        
+        do {
+            let jsonData = try encoder.encode(modelInfo)
             try jsonData.write(to: jsonURL)
         } catch {
             throw IconGeneratorError.jsonWriteFailed(error.localizedDescription)
@@ -210,3 +232,4 @@ extension Layer {
         )
     }
 }
+
