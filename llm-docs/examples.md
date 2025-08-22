@@ -109,3 +109,38 @@
   }
 }
 ```
+## Main Fill Types
+solid
+```json
+{
+  "fill": {
+    "solid": "extended-srgb:0.2,0.2,0.2,1.0"
+  },
+```
+gradient
+```json
+{
+  "fill" : {
+    "automatic-gradient" : "extended-srgb:0.2,0.05,0.3,1.0"
+  },
+```
+custom gradient
+```json
+{
+  "fill" : {
+    "linear-gradient" : [
+      "display-p3:0.46027,0.11462,0.19305,1.00000",
+      "display-p3:0.46027,0.26564,0.36612,1.00000"
+    ]
+  },
+```
+system
+```json
+{
+  "fill" : "system-light",
+```
+```json
+{
+  "fill" : "system-dark",
+```
+
