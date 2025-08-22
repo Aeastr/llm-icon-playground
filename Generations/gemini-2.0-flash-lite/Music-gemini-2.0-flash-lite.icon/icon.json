@@ -1,21 +1,10 @@
 {
   "fill" : {
-    "automatic-gradient" : "extended-srgb:0.2,0.8,1.0,1.0"
+    "automatic-gradient" : "extended-srgb:0.20000,0.80000,1.00000,1.00000"
   },
   "groups" : [
     {
       "layers" : [
-        {
-          "image-name" : "1024x1024pxCircle.svg",
-          "name" : "Background",
-          "position" : {
-            "scale" : 1,
-            "translation-in-points" : [
-              0,
-              0
-            ]
-          }
-        },
         {
           "image-name" : "512x512pxPlus.svg",
           "name" : "Musical Note",
@@ -26,8 +15,27 @@
               0
             ]
           }
+        },
+        {
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "Background",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
         }
-      ]
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
     }
   ],
   "supported-platforms" : {

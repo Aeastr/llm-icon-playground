@@ -1,118 +1,165 @@
 {
-  "fill": {
-    "automaticGradient": "display-p3:0.2,0.4,0.8,1.0"
+  "fill" : {
+    "automatic-gradient" : "extended-srgb:0.20000,0.40000,0.80000,1.00000"
   },
-  "groups": [
+  "groups" : [
     {
-      "layers": [
+      "layers" : [
         {
-          "name": "Head",
-          "imageName": "1024x1024pxRoundedRectangle100px.svg",
-          "position": {
-            "scale": 0.7,
-            "translationInPoints": [0, 50]
+          "fill" : {
+            "solid" : "extended-srgb:0.20000,0.60000,1.00000,1.00000"
           },
-          "fill": {
-            "solid": "display-p3:0.85,0.85,0.9,1.0"
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "Left Eye",
+          "position" : {
+            "scale" : 0.12,
+            "translation-in-points" : [
+              -80,
+              80
+            ]
           }
         },
         {
-          "name": "Left Eye",
-          "imageName": "1024x1024pxCircle.svg", 
-          "position": {
-            "scale": 0.12,
-            "translationInPoints": [-80, 80]
+          "fill" : {
+            "solid" : "extended-srgb:0.20000,0.60000,1.00000,1.00000"
           },
-          "fill": {
-            "solid": "display-p3:0.2,0.6,1.0,1.0"
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "Right Eye",
+          "position" : {
+            "scale" : 0.12,
+            "translation-in-points" : [
+              80,
+              80
+            ]
           }
         },
         {
-          "name": "Right Eye",
-          "imageName": "1024x1024pxCircle.svg",
-          "position": {
-            "scale": 0.12,
-            "translationInPoints": [80, 80]
+          "fill" : {
+            "solid" : "extended-srgb:0.40000,0.40000,0.40000,1.00000"
           },
-          "fill": {
-            "solid": "display-p3:0.2,0.6,1.0,1.0"
+          "image-name" : "1024x512pxRoundedRectangle40px.svg",
+          "name" : "Mouth",
+          "position" : {
+            "scale" : 0.15,
+            "translation-in-points" : [
+              0,
+              20
+            ]
           }
         },
         {
-          "name": "Mouth",
-          "imageName": "1024x512pxRoundedRectangle40px.svg",
-          "position": {
-            "scale": 0.15,
-            "translationInPoints": [0, 20]
+          "fill" : {
+            "solid" : "extended-srgb:0.60000,0.60000,0.60000,1.00000"
           },
-          "fill": {
-            "solid": "display-p3:0.4,0.4,0.4,1.0"
+          "image-name" : "64x1024pxRectangle.svg",
+          "name" : "Antenna Base",
+          "position" : {
+            "scale" : 0.08,
+            "translation-in-points" : [
+              0,
+              170
+            ]
           }
         },
         {
-          "name": "Antenna Base",
-          "imageName": "64x1024pxRectangle.svg",
-          "position": {
-            "scale": 0.08,
-            "translationInPoints": [0, 170]
+          "fill" : {
+            "automatic-gradient" : "extended-srgb:1.00000,0.30000,0.30000,1.00000"
           },
-          "fill": {
-            "solid": "display-p3:0.6,0.6,0.6,1.0"
+          "hidden" : false,
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "Antenna Light",
+          "position" : {
+            "scale" : 0.06,
+            "translation-in-points" : [
+              0,
+              220
+            ]
           }
         },
         {
-          "name": "Antenna Light",
-          "imageName": "1024x1024pxCircle.svg",
-          "position": {
-            "scale": 0.06,
-            "translationInPoints": [0, 220]
+          "fill" : {
+            "solid" : "extended-srgb:0.85000,0.85000,0.90000,1.00000"
           },
-          "fill": {
-            "automaticGradient": "display-p3:1.0,0.3,0.3,1.0"
+          "hidden" : false,
+          "image-name" : "1024x1024pxRoundedRectangle100px.svg",
+          "name" : "Head",
+          "position" : {
+            "scale" : 0.7,
+            "translation-in-points" : [
+              0,
+              50
+            ]
           }
         }
-      ]
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
     },
     {
-      "layers": [
+      "layers" : [
         {
-          "name": "Body",
-          "imageName": "1024x1024pxRoundedRectangle60px.svg",
-          "position": {
-            "scale": 0.5,
-            "translationInPoints": [0, -120]
+          "fill" : {
+            "automatic-gradient" : "extended-srgb:0.20000,0.80000,0.20000,1.00000"
           },
-          "fill": {
-            "solid": "display-p3:0.7,0.7,0.75,1.0"
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "Power Button",
+          "position" : {
+            "scale" : 0.04,
+            "translation-in-points" : [
+              0,
+              -140
+            ]
           }
         },
         {
-          "name": "Chest Panel",
-          "imageName": "1024x1024pxRoundedRectangle60px.svg",
-          "position": {
-            "scale": 0.25,
-            "translationInPoints": [0, -120]
+          "fill" : {
+            "solid" : "extended-srgb:0.30000,0.30000,0.35000,1.00000"
           },
-          "fill": {
-            "solid": "display-p3:0.3,0.3,0.35,1.0"
+          "image-name" : "1024x1024pxRoundedRectangle60px.svg",
+          "name" : "Chest Panel",
+          "position" : {
+            "scale" : 0.25,
+            "translation-in-points" : [
+              0,
+              -120
+            ]
           }
         },
         {
-          "name": "Power Button",
-          "imageName": "1024x1024pxCircle.svg",
-          "position": {
-            "scale": 0.04,
-            "translationInPoints": [0, -140]
+          "fill" : {
+            "solid" : "extended-srgb:0.70000,0.70000,0.75000,1.00000"
           },
-          "fill": {
-            "automaticGradient": "display-p3:0.2,0.8,0.2,1.0"
+          "image-name" : "1024x1024pxRoundedRectangle60px.svg",
+          "name" : "Body",
+          "position" : {
+            "scale" : 0.5,
+            "translation-in-points" : [
+              0,
+              -120
+            ]
           }
         }
-      ]
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
     }
   ],
-  "supportedPlatforms": {
-    "circles": ["watchOS"],
-    "squares": "shared"
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
   }
 }
