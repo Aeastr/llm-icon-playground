@@ -66,6 +66,9 @@
 ## With Specializations
 ```json
 {
+  "fill": {
+    "solid": "extended-srgb:0.2,0.2,0.2,1.0"
+  },
   "groups": [
     {
       "layers": [
