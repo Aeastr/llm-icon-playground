@@ -1,0 +1,64 @@
+{
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.90000,0.90000,0.90000,1.00000"
+          },
+          "image-name" : "1024x1024pxRectangle.svg",
+          "name" : "Card",
+          "position" : {
+            "scale" : 0.3,
+            "translation-in-points" : [
+              0,
+              -70
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.70000,0.50000,0.30000,1.00000"
+          },
+          "image-name" : "1024x512pxRectangle.svg",
+          "name" : "Wallet Flap",
+          "position" : {
+            "scale" : 0.8,
+            "translation-in-points" : [
+              0,
+              -100
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.60000,0.40000,0.20000,1.00000"
+          },
+          "image-name" : "1024x1024pxRectangle.svg",
+          "name" : "Wallet Body",
+          "position" : {
+            "scale" : 0.8,
+            "translation-in-points" : [
+              0,
+              50
+            ]
+          }
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}

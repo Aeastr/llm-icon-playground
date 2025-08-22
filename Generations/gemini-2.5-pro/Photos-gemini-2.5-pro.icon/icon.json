@@ -1,0 +1,121 @@
+{
+  "fill" : {
+    "automatic-gradient" : "extended-srgb:0.9,0.9,0.95,1.0"
+  },
+  "groups" : [
+    {
+      "blend-mode" : "multiply",
+      "layers" : [
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,0.1,0.3,1.0"
+          },
+          "image-name" : "512x1024pxEllipse.svg",
+          "name" : "Petal Red",
+          "position" : {
+            "scale" : 0.4,
+            "translation-in-points" : [
+              150,
+              0
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,0.5,0.0,1.0"
+          },
+          "image-name" : "512x1024pxEllipse.svg",
+          "name" : "Petal Orange",
+          "position" : {
+            "scale" : 0.4,
+            "translation-in-points" : [
+              75,
+              130
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,0.9,0.2,1.0"
+          },
+          "image-name" : "512x1024pxEllipse.svg",
+          "name" : "Petal Yellow",
+          "position" : {
+            "scale" : 0.4,
+            "translation-in-points" : [
+              -75,
+              130
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.2,0.8,0.3,1.0"
+          },
+          "image-name" : "512x1024pxEllipse.svg",
+          "name" : "Petal Green",
+          "position" : {
+            "scale" : 0.4,
+            "translation-in-points" : [
+              -150,
+              0
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.1,0.5,1.0,1.0"
+          },
+          "image-name" : "512x1024pxEllipse.svg",
+          "name" : "Petal Blue",
+          "position" : {
+            "scale" : 0.4,
+            "translation-in-points" : [
+              -75,
+              -130
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.7,0.2,1.0,1.0"
+          },
+          "image-name" : "512x1024pxEllipse.svg",
+          "name" : "Petal Purple",
+          "position" : {
+            "scale" : 0.4,
+            "translation-in-points" : [
+              75,
+              -130
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,1.0,1.0,1.0"
+          },
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "Background Circle",
+          "position" : {
+            "scale" : 0.85,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "lighting" : "individual",
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.2
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}

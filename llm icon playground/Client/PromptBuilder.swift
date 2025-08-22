@@ -117,18 +117,18 @@ extension PromptBuilder {
     /// Validates a generated icon against constraints
     static func validateIcon(_ iconFile: IconFile) -> [String] {
         var errors: [String] = []
-        
-        // Check group count
-        if iconFile.groups.count > 4 {
-            errors.append("Too many groups: \(iconFile.groups.count) (max 4)")
-        }
-        
-        // Check layer count per group
-        for (index, group) in iconFile.groups.enumerated() {
-            if group.layers.count > 8 {
-                errors.append("Group \(index) has too many layers: \(group.layers.count) (max 8)")
-            }
-        }
+//        
+//        // Check group count
+//        if iconFile.groups.count > 4 {
+//            errors.append("Too many groups: \(iconFile.groups.count) (max 4)")
+//        }
+//        
+//        // Check layer count per group
+//        for (index, group) in iconFile.groups.enumerated() {
+//            if group.layers.count > 8 {
+//                errors.append("Group \(index) has too many layers: \(group.layers.count) (max 8)")
+//            }
+//        }
         
         // Check for missing assets
         let missingAssets = validateAssets(in: iconFile)

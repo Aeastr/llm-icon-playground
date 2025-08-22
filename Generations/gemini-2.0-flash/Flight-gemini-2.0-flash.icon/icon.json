@@ -1,44 +1,51 @@
 {
   "fill" : {
-    "solid" : "extended-srgb:0.529,0.804,0.922,1.0"
+    "solid" : "extended-srgb:0.529,0.808,0.922,1.0"
   },
   "groups" : [
     {
       "layers" : [
         {
           "image-name" : "1024x1024pxTriangle.svg",
-          "name" : "Plane Silhouette",
+          "name" : "Plane",
           "position" : {
-            "scale" : 0.4,
+            "scale" : 0.3,
             "translation-in-points" : [
-              0,
+              150,
+              0
+            ]
+          }
+        },
+        {
+          "image-name" : "1024x64pxRectangle.svg",
+          "name" : "Contrail1",
+          "position" : {
+            "scale" : 0.2,
+            "translation-in-points" : [
+              -100,
               -50
             ]
           }
         },
         {
           "image-name" : "1024x64pxRectangle.svg",
-          "name" : "Contrail 1",
+          "name" : "Contrail2",
           "position" : {
-            "scale" : 0.3,
+            "scale" : 0.2,
             "translation-in-points" : [
-              -150,
-              -100
-            ]
-          }
-        },
-        {
-          "image-name" : "1024x64pxRectangle.svg",
-          "name" : "Contrail 2",
-          "position" : {
-            "scale" : 0.3,
-            "translation-in-points" : [
-              -150,
-              -150
+              -100,
+              50
             ]
           }
         }
-      ]
+      ],
+      "position" : {
+        "scale" : 0.5,
+        "translation-in-points" : [
+          0,
+          0
+        ]
+      }
     }
   ],
   "supported-platforms" : {

@@ -4,71 +4,99 @@
       "layers" : [
         {
           "fill" : {
-            "solid" : "extended-srgb:1.00000,1.00000,1.00000,1.00000"
+            "solid" : "extended-srgb:1.00000,0.00000,0.00000,1.00000"
           },
-          "image-name" : "512x512pxPlus.svg",
-          "name" : "Pin Top",
+          "image-name" : "1024x1024pxDiamond.svg",
+          "name" : "pin",
           "position" : {
-            "scale" : 0.07,
+            "scale" : 0.25,
             "translation-in-points" : [
-              150,
-              -100
-            ]
-          }
-        },
-        {
-          "fill" : {
-            "solid" : "extended-srgb:0.90000,0.90000,0.10000,1.00000"
-          },
-          "image-name" : "1024x1024pxCircle.svg",
-          "name" : "Pin Base",
-          "position" : {
-            "scale" : 0.15,
-            "translation-in-points" : [
-              150,
-              -100
-            ]
-          }
-        },
-        {
-          "fill" : {
-            "solid" : "extended-srgb:0.20000,0.80000,0.20000,1.00000"
-          },
-          "image-name" : "1024x512pxRectangle.svg",
-          "name" : "Line 3",
-          "position" : {
-            "scale" : 0.8,
-            "translation-in-points" : [
-              -50,
+              0,
               0
             ]
           }
         },
         {
           "fill" : {
-            "solid" : "extended-srgb:0.80000,0.20000,0.20000,1.00000"
+            "solid" : "extended-srgb:0.00000,0.00000,0.00000,1.00000"
           },
-          "image-name" : "1024x512pxRectangle.svg",
-          "name" : "Line 2",
+          "image-name" : "1024x64pxRectangle.svg",
+          "name" : "horizontal lines",
           "position" : {
-            "scale" : 0.8,
+            "scale" : 1,
             "translation-in-points" : [
-              50,
-              100
+              0,
+              -256
             ]
           }
         },
         {
           "fill" : {
-            "solid" : "extended-srgb:0.20000,0.40000,0.80000,1.00000"
+            "solid" : "extended-srgb:0.00000,0.00000,0.00000,1.00000"
           },
-          "image-name" : "1024x512pxRectangle.svg",
-          "name" : "Line 1",
+          "image-name" : "1024x64pxRectangle.svg",
+          "name" : "horizontal lines",
           "position" : {
-            "scale" : 0.8,
+            "scale" : 1,
             "translation-in-points" : [
               0,
-              -100
+              0
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.00000,0.00000,0.00000,1.00000"
+          },
+          "image-name" : "1024x64pxRectangle.svg",
+          "name" : "horizontal lines",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              0,
+              256
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.00000,0.00000,0.00000,1.00000"
+          },
+          "image-name" : "64x1024pxRectangle.svg",
+          "name" : "vertical lines",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              -256,
+              0
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.00000,0.00000,0.00000,1.00000"
+          },
+          "image-name" : "64x1024pxRectangle.svg",
+          "name" : "vertical lines",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.00000,0.00000,0.00000,1.00000"
+          },
+          "image-name" : "64x1024pxRectangle.svg",
+          "name" : "vertical lines",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              256,
+              0
             ]
           }
         },
@@ -76,8 +104,8 @@
           "fill" : {
             "solid" : "extended-srgb:0.80000,0.80000,0.80000,1.00000"
           },
-          "image-name" : "1024x1024pxRoundedRectangle60px.svg",
-          "name" : "Map Background",
+          "image-name" : "1024x1024pxRectangle.svg",
+          "name" : "background",
           "position" : {
             "scale" : 1,
             "translation-in-points" : [

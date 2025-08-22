@@ -1,0 +1,121 @@
+{
+  "fill" : {
+    "automatic-gradient" : "extended-srgb:0.95,0.9,0.98,1.0,extended-srgb:0.85,0.9,0.95,1.0"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,0.8,0.0,1.0"
+          },
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "Flower Center",
+          "position" : {
+            "scale" : 0.25,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "automatic-gradient" : "extended-srgb:1.0,0.6,0.8,1.0,extended-srgb:1.0,0.8,0.6,1.0"
+          },
+          "image-name" : "1024x512pxEllipse.svg",
+          "name" : "Petal 4 (Bottom)",
+          "position" : {
+            "scale" : 0.4,
+            "translation-in-points" : [
+              0,
+              150
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "automatic-gradient" : "extended-srgb:1.0,0.6,0.8,1.0,extended-srgb:1.0,0.8,0.6,1.0"
+          },
+          "image-name" : "1024x512pxEllipse.svg",
+          "name" : "Petal 3 (Bottom-Right)",
+          "position" : {
+            "scale" : 0.4,
+            "translation-in-points" : [
+              130,
+              75
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "automatic-gradient" : "extended-srgb:1.0,0.6,0.8,1.0,extended-srgb:1.0,0.8,0.6,1.0"
+          },
+          "image-name" : "1024x512pxEllipse.svg",
+          "name" : "Petal 5 (Bottom-Left)",
+          "position" : {
+            "scale" : 0.4,
+            "translation-in-points" : [
+              -130,
+              75
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "automatic-gradient" : "extended-srgb:1.0,0.6,0.8,1.0,extended-srgb:1.0,0.8,0.6,1.0"
+          },
+          "image-name" : "1024x512pxEllipse.svg",
+          "name" : "Petal 2 (Top-Right)",
+          "position" : {
+            "scale" : 0.4,
+            "translation-in-points" : [
+              130,
+              -75
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "automatic-gradient" : "extended-srgb:1.0,0.6,0.8,1.0,extended-srgb:1.0,0.8,0.6,1.0"
+          },
+          "image-name" : "1024x512pxEllipse.svg",
+          "name" : "Petal 6 (Top-Left)",
+          "position" : {
+            "scale" : 0.4,
+            "translation-in-points" : [
+              -130,
+              -75
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "automatic-gradient" : "extended-srgb:1.0,0.6,0.8,1.0,extended-srgb:1.0,0.8,0.6,1.0"
+          },
+          "image-name" : "1024x512pxEllipse.svg",
+          "name" : "Petal 1 (Top)",
+          "position" : {
+            "scale" : 0.4,
+            "translation-in-points" : [
+              0,
+              -150
+            ]
+          }
+        }
+      ],
+      "lighting" : "combined",
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.3
+      },
+      "specular" : true
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}

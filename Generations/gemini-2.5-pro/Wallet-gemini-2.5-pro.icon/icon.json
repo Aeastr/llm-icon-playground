@@ -1,0 +1,70 @@
+{
+  "fill" : {
+    "solid" : "extended-srgb:0.87000,0.78000,0.65000,1.00000"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.40000,0.26000,0.13000,1.00000"
+          },
+          "hidden" : false,
+          "image-name" : "1024x512pxRectangle.svg",
+          "name" : "Flap",
+          "position" : {
+            "scale" : 0.8,
+            "translation-in-points" : [
+              0,
+              120
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.95000,0.92000,0.88000,1.00000"
+          },
+          "hidden" : false,
+          "image-name" : "1024x512pxRoundedRectangle40px.svg",
+          "name" : "Card",
+          "position" : {
+            "scale" : 0.65,
+            "translation-in-points" : [
+              0,
+              40
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.40000,0.26000,0.13000,1.00000"
+          },
+          "image-name" : "1024x1024pxRoundedRectangle100px.svg",
+          "name" : "Body",
+          "position" : {
+            "scale" : 0.8,
+            "translation-in-points" : [
+              0,
+              -40
+            ]
+          }
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.35
+      },
+      "specular" : true,
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "fill" : {
+    "solid" : "extended-srgb:0.8,0.8,0.8,1.0"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "fill" : {
+            "solid" : "extended-srgb:1.0,0.0,0.0,1.0"
+          },
+          "image-name" : "1024x1024pxDiamond.svg",
+          "name" : "Red Diamond",
+          "position" : {
+            "scale" : 0.4,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.2,0.2,0.2,1.0"
+          },
+          "image-name" : "1024x64pxRectangle.svg",
+          "name" : "Horizontal Line 1",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              0,
+              -150
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.2,0.2,0.2,1.0"
+          },
+          "image-name" : "1024x64pxRectangle.svg",
+          "name" : "Horizontal Line 2",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              0,
+              150
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.2,0.2,0.2,1.0"
+          },
+          "image-name" : "64x1024pxRectangle.svg",
+          "name" : "Vertical Line 1",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              -150,
+              0
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "extended-srgb:0.2,0.2,0.2,1.0"
+          },
+          "image-name" : "64x1024pxRectangle.svg",
+          "name" : "Vertical Line 2",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              150,
+              0
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}

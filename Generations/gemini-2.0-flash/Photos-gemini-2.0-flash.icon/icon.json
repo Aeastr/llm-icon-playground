@@ -1,0 +1,174 @@
+{
+  "fill" : {
+    "solid" : "extended-srgb:0.90000,0.90000,0.90000,1.00000"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "image-name" : "1024x512pxEllipse.svg",
+          "name" : "ellipse1",
+          "position" : {
+            "scale" : 0.4,
+            "translation-in-points" : [
+              0,
+              -150
+            ]
+          }
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    },
+    {
+      "layers" : [
+        {
+          "image-name" : "1024x512pxEllipse.svg",
+          "name" : "ellipse2",
+          "position" : {
+            "scale" : 0.4,
+            "translation-in-points" : [
+              130,
+              -75
+            ]
+          }
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    },
+    {
+      "layers" : [
+        {
+          "image-name" : "1024x512pxEllipse.svg",
+          "name" : "ellipse3",
+          "position" : {
+            "scale" : 0.4,
+            "translation-in-points" : [
+              130,
+              75
+            ]
+          }
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    },
+    {
+      "layers" : [
+        {
+          "image-name" : "1024x512pxEllipse.svg",
+          "name" : "ellipse4",
+          "position" : {
+            "scale" : 0.4,
+            "translation-in-points" : [
+              0,
+              150
+            ]
+          }
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    },
+    {
+      "layers" : [
+        {
+          "image-name" : "1024x512pxEllipse.svg",
+          "name" : "ellipse5",
+          "position" : {
+            "scale" : 0.4,
+            "translation-in-points" : [
+              -130,
+              75
+            ]
+          }
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    },
+    {
+      "layers" : [
+        {
+          "image-name" : "1024x512pxEllipse.svg",
+          "name" : "ellipse6",
+          "position" : {
+            "scale" : 0.4,
+            "translation-in-points" : [
+              -130,
+              -75
+            ]
+          }
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    },
+    {
+      "layers" : [
+        {
+          "image-name" : "1024x1024pxCircle.svg",
+          "name" : "background",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}
