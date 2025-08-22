@@ -143,8 +143,8 @@ struct IconToolsManager {
                 name: "updateIconBackground",
                 description: "Change the main background fill of the icon",
                 parameters: [
-                    "fillType": ParameterDefinition(type: "string", description: "Type of fill: 'color' or 'gradient'"),
-                    "color": ParameterDefinition(type: "string", description: "Hex color code (required for color fills)")
+                    "fillType": ParameterDefinition(type: "string", description: "Type of fill: 'color'/'solid' (with color), 'automatic', 'system-light', 'system-dark', 'automatic-gradient' (with color)"),
+                    "color": ParameterDefinition(type: "string", description: "Color in extended-srgb:r,g,b,a format (required for fillType='color' and 'automatic-gradient')")
                 ]
             ),
             ToolDefinition(
@@ -152,8 +152,8 @@ struct IconToolsManager {
                 description: "Add a background appearance variant for light/dark mode",
                 parameters: [
                     "appearance": ParameterDefinition(type: "string", description: "Appearance mode: 'light' or 'dark'"),
-                    "fillType": ParameterDefinition(type: "string", description: "Type of fill: 'color' or 'gradient'"),
-                    "color": ParameterDefinition(type: "string", description: "Hex color code (required for color fills)")
+                    "fillType": ParameterDefinition(type: "string", description: "Type of fill: 'color'/'solid' (with color), 'automatic', 'system-light', 'system-dark', 'automatic-gradient' (with color)"),
+                    "color": ParameterDefinition(type: "string", description: "Color in extended-srgb:r,g,b,a format (required for fillType='color' and 'automatic-gradient')")
                 ]
             ),
             ToolDefinition(

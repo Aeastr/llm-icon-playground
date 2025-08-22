@@ -30,22 +30,29 @@ struct IconTools {
         // 2. Create new fill based on type
         let newFill: Fill
         switch fillType.lowercased() {
-        case "color":
+        case "color", "solid":
             guard let color = color else {
-                throw IconToolError.invalidParameters("Color fills require a 'color' parameter with a hex color code (e.g., '#FF0000' or 'FF0000'). You provided fillType='color' but no color parameter.")
+                throw IconToolError.invalidParameters("Color fills require a 'color' parameter. You provided fillType='color' but no color parameter.")
             }
-            // For solid colors, use the 'solid' property with hex color
             newFill = Fill(automaticGradient: nil, solid: color)
             
-        case "gradient":
-            guard let gradientData = gradient else {
-                throw IconToolError.invalidParameters("Gradient fills require a 'gradient' parameter with gradient data. You provided fillType='gradient' but no gradient parameter. For solid colors, use fillType='color' with a 'color' parameter instead.")
+        case "automatic":
+            newFill = Fill(automaticGradient: nil, solid: "automatic")
+            
+        case "system-light":
+            newFill = Fill(automaticGradient: nil, solid: "system-light")
+            
+        case "system-dark":
+            newFill = Fill(automaticGradient: nil, solid: "system-dark")
+            
+        case "gradient", "automatic-gradient":
+            guard let color = color else {
+                throw IconToolError.invalidParameters("Automatic gradient fills require a 'color' parameter for the base color.")
             }
-            // TODO: Parse gradient data into gradient format
-            throw IconToolError.notImplemented("Gradient fills are not yet implemented. Use fillType='color' with a 'color' parameter for solid color backgrounds instead.")
+            newFill = Fill(automaticGradient: color, solid: nil)
             
         default:
-            throw IconToolError.invalidParameters("Invalid fillType '\(fillType)'. Must be 'color' for solid colors or 'gradient' for gradients. You provided: '\(fillType)'")
+            throw IconToolError.invalidParameters("Invalid fillType '\(fillType)'. Valid options: 'color'/'solid' (with color), 'automatic', 'system-light', 'system-dark', 'automatic-gradient' (with color). You provided: '\(fillType)'")
         }
         
         // 3. Update the icon's background fill
@@ -84,18 +91,29 @@ struct IconTools {
         // 3. Create new fill
         let newFill: Fill
         switch fillType.lowercased() {
-        case "color":
+        case "color", "solid":
             guard let color = color else {
-                throw IconToolError.invalidParameters("Color fills require a 'color' parameter with a hex color code (e.g., '#FF0000' or 'FF0000'). You provided fillType='color' but no color parameter.")
+                throw IconToolError.invalidParameters("Color fills require a 'color' parameter. You provided fillType='color' but no color parameter.")
             }
-            // For solid colors, use the 'solid' property with hex color
             newFill = Fill(automaticGradient: nil, solid: color)
             
-        case "gradient":
-            throw IconToolError.notImplemented("Gradient fills are not yet implemented. Use fillType='color' with a 'color' parameter for solid color backgrounds instead.")
+        case "automatic":
+            newFill = Fill(automaticGradient: nil, solid: "automatic")
+            
+        case "system-light":
+            newFill = Fill(automaticGradient: nil, solid: "system-light")
+            
+        case "system-dark":
+            newFill = Fill(automaticGradient: nil, solid: "system-dark")
+            
+        case "gradient", "automatic-gradient":
+            guard let color = color else {
+                throw IconToolError.invalidParameters("Automatic gradient fills require a 'color' parameter for the base color.")
+            }
+            newFill = Fill(automaticGradient: color, solid: nil)
             
         default:
-            throw IconToolError.invalidParameters("Invalid fillType '\(fillType)'. Must be 'color' for solid colors or 'gradient' for gradients. You provided: '\(fillType)'")
+            throw IconToolError.invalidParameters("Invalid fillType '\(fillType)'. Valid options: 'color'/'solid' (with color), 'automatic', 'system-light', 'system-dark', 'automatic-gradient' (with color). You provided: '\(fillType)'")
         }
         
         // 4. Create specialization
