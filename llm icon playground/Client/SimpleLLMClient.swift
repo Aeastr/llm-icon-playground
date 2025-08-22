@@ -342,14 +342,15 @@ class SimpleLLMClient {
                     
                     if !finalText.isEmpty {
                         chatLogger?.addAssistantMessage(finalText)
+                        // Update conversation history with final response
+                        self.currentConversationHistory = updatedHistory
+                        completion(.success(finalText))
                     } else {
-                        print("⚠️ LLM returned empty final text")
+                        print("⚠️ LLM returned empty final text - treating as conversation completion")
+                        // Even if empty, update history and complete conversation so it can continue
+                        self.currentConversationHistory = updatedHistory
+                        completion(.success(""))
                     }
-                    
-                    // Update conversation history with final response
-                    self.currentConversationHistory = updatedHistory
-                    
-                    completion(.success(finalText))
                 }
                 
             case .failure(let error):
@@ -436,6 +437,16 @@ class SimpleLLMClient {
         tools: [LLMRequest.Tool],
         completion: @escaping (Result<LLMResponse, Error>) -> Void
     ) {
+        makeAPICallWithRetry(contents: contents, tools: tools, retryCount: 0, completion: completion)
+    }
+    
+    /// Makes an API call with retry logic
+    private func makeAPICallWithRetry(
+        contents: [LLMRequest.Content],
+        tools: [LLMRequest.Tool],
+        retryCount: Int,
+        completion: @escaping (Result<LLMResponse, Error>) -> Void
+    ) {
         guard !apiKey.isEmpty else {
             completion(.failure(LLMError.invalidAPIKey))
             return
@@ -471,6 +482,14 @@ class SimpleLLMClient {
         URLSession.shared.dataTask(with: urlRequest) { data, response, error in
             DispatchQueue.main.async {
                 if let error = error {
+                    // Retry on network errors
+                    if retryCount < 2 {
+                        print("🔄 Network error, retrying (\(retryCount + 1)/3): \(error.localizedDescription)")
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                            self.makeAPICallWithRetry(contents: contents, tools: tools, retryCount: retryCount + 1, completion: completion)
+                        }
+                        return
+                    }
                     completion(.failure(LLMError.networkError(self.sanitizeErrorMessage(error.localizedDescription))))
                     return
                 }
@@ -486,6 +505,18 @@ class SimpleLLMClient {
                 } catch {
                     if let errorString = String(data: data, encoding: .utf8) {
                         let sanitizedError = self.sanitizeErrorMessage(errorString)
+                        
+                        // Check if it's a 500 internal error - retry those
+                        if sanitizedError.contains("\"code\": 500") || sanitizedError.contains("INTERNAL") {
+                            if retryCount < 2 {
+                                print("🔄 API 500 error, retrying (\(retryCount + 1)/3)")
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                                    self.makeAPICallWithRetry(contents: contents, tools: tools, retryCount: retryCount + 1, completion: completion)
+                                }
+                                return
+                            }
+                        }
+                        
                         completion(.failure(LLMError.apiError(sanitizedError)))
                     } else {
                         completion(.failure(LLMError.invalidResponse))
