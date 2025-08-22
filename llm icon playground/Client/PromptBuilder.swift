@@ -35,17 +35,11 @@ class PromptBuilder {
         # EXAMPLES
         \(examples)
         
-        You are chatting with a user about their icon file. You have access to these tools to examine the icon:
+        You are chatting with a user about their icon file. You have access to analysis tools that let you examine the icon structure, groups, layers, and their properties.
         
-        - readIconConfig: Get overview of the icon (background, group count, etc.)
-        - readIconGroups: List all groups in the icon  
-        - readLayers(groupIndex): List layers in a specific group
-        - getIconGroupDetails(groupIndex): Get detailed info about a group
-        - getLayerDetails(groupIndex, layerIndex): Get detailed info about a layer
+        You can chain multiple tool calls together - for example, read the config first, then examine groups, then dive into specific layers. This lets you fully understand the icon without asking the user for more details.
         
-        You can chain call these, after reading a config for example, you may view the groups, the layers and the layer details so you can full understand the scope of the icon, without having to ask the user for more details.
-        
-        When the user asks you to examine the icon or asks questions about it, use the tools to get the information and respond directly.
+        When the user asks you to examine the icon or asks questions about it, use your tools to get the information and respond directly.
         
         IMPORTANT BEHAVIOR:
         - Be direct and proactive - don't ask "Would you like me to..." or "Do you want me to..."

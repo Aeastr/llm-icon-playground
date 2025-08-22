@@ -8,20 +8,65 @@
 import Foundation
 
 // MARK: - Function Calling Models
+
+/*
+ HOW FUNCTION CALLING WORKS:
+ 
+ 1. We send LLMRequest with:
+    - Conversation history (user messages, AI responses, function results)
+    - Available tools/functions the AI can call
+    - Generation settings (creativity, max length, etc.)
+ 
+ 2. AI responds with LLMResponse containing either:
+    - Text response (normal chat)
+    - Function calls (AI wants to get more info)
+    - Both (AI calls functions then responds with text)
+ 
+ 3. If AI made function calls, we:
+    - Execute those functions in our app
+    - Send results back as FunctionResponse
+    - Continue the conversation
+ 
+ 4. This repeats until AI gives final text response
+ 
+ EXAMPLE FLOW:
+ User: "What is this icon?"
+ → AI calls: readIconConfig()
+ → We return: "2 groups, 8 layers"
+ → AI calls: readIconGroups()  
+ → We return: "Group 1 (7 layers), Group 2 (1 layer)"
+ → AI responds: "This icon has 2 groups with 8 total layers..."
+*/
+
+/// The main request structure sent to the Gemini API
+/// This tells the API what we want it to do and what tools it can use
 struct LLMRequest: Codable {
+    /// The conversation history - array of messages between user, assistant, and function results
     let contents: [Content]
+    /// Settings that control how the AI generates responses (creativity, length, etc.)
     let generationConfig: GenerationConfig?
+    /// Optional list of tools/functions the AI can call to get information
     let tools: [Tool]?
     
+    /// Represents a single message in the conversation
+    /// Could be from user, assistant (model), or function call results
     struct Content: Codable {
+        /// The actual content pieces - can be text, function calls, or function responses
         let parts: [Part]
+        /// Who sent this message: "user", "model", or "function"
         let role: String?
         
+        /// A single piece of content within a message
+        /// Only ONE of these will be set at a time
         struct Part: Codable {
+            /// Regular text content (what humans type or AI responds with)
             let text: String?
+            /// When AI wants to call a tool/function (AI → Tool)
             let functionCall: FunctionCall?
+            /// The result coming back from a tool/function (Tool → AI)
             let functionResponse: FunctionResponse?
             
+            /// Maps the API's camelCase to our Swift naming
             enum CodingKeys: String, CodingKey {
                 case text
                 case functionCall = "functionCall"
@@ -30,59 +75,97 @@ struct LLMRequest: Codable {
         }
     }
     
+    /// Controls how creative/focused the AI's responses are
     struct GenerationConfig: Codable {
+        /// 0.0 = very focused, 1.0 = very creative/random
         let temperature: Double?
+        /// How many top candidates to consider (higher = more diverse)
         let topK: Int?
+        /// Cumulative probability cutoff (0.0-1.0, higher = more diverse)
         let topP: Double?
+        /// Maximum number of tokens (words/pieces) in the response
         let maxOutputTokens: Int?
     }
     
+    /// Describes what tools/functions are available to the AI
     struct Tool: Codable {
+        /// List of all the functions the AI can call
         let functionDeclarations: [FunctionDeclaration]
     }
     
+    /// Describes a single function the AI can call
     struct FunctionDeclaration: Codable {
+        /// Function name (like "readIconConfig")
         let name: String
+        /// Human-readable description of what this function does
         let description: String
+        /// Describes what parameters this function accepts
         let parameters: FunctionParameters
     }
     
+    /// Describes the parameters a function accepts (JSON Schema format)
     struct FunctionParameters: Codable {
+        /// Always "object" for function parameters
         let type: String
+        /// Map of parameter name → parameter definition
         let properties: [String: PropertyDefinition]
+        /// Array of required parameter names
         let required: [String]?
     }
     
+    /// Describes a single parameter for a function
     struct PropertyDefinition: Codable {
+        /// Data type: "string", "integer", "boolean", etc.
         let type: String
+        /// Human-readable description of this parameter
         let description: String
     }
 }
 
+/// When the AI wants to call one of our functions
+/// This gets sent from AI → our app
 struct FunctionCall: Codable {
+    /// Name of the function to call (e.g., "readIconConfig")
     let name: String
+    /// Arguments to pass to the function (always strings from Gemini)
     let args: [String: String]
 }
 
+/// The result of calling a function
+/// This gets sent from our app → AI
 struct FunctionResponse: Codable {
+    /// Name of the function that was called
     let name: String
+    /// The result data (we put actual result in "result" key)
     let response: [String: String]
 }
 
+/// The response we get back from the Gemini API
+/// Contains the AI's response and any function calls it wants to make
 struct LLMResponse: Codable {
+    /// Array of possible responses (usually just one)
     let candidates: [Candidate]
     
+    /// A single response candidate from the AI
     struct Candidate: Codable {
+        /// The actual content of the response
         let content: Content
+        /// Why the AI stopped generating ("STOP", "MAX_TOKENS", etc.)
         let finishReason: String?
         
+        /// The content within a candidate response
         struct Content: Codable {
+            /// Array of content parts (text and/or function calls)
             let parts: [Part]
             
+            /// A single piece of content in the response
             struct Part: Codable {
+                /// Text response from the AI (what the user sees)
                 let text: String?
+                /// Function call the AI wants to make (to get more info)
                 let functionCall: FunctionCall?
                 
+                /// Maps API's camelCase to Swift naming
                 enum CodingKeys: String, CodingKey {
                     case text
                     case functionCall = "functionCall"
@@ -682,9 +765,6 @@ extension SimpleLLMClient {
     
     /// Commonly available models (fallback if API call fails)
     static let commonModels = [
-        "gemini-2.5-flash",
-        "gemini-2.0-flash-exp",
-        "gemini-1.5-flash",
-        "gemini-1.5-pro"
+        "gemini-2.5-flash"
     ]
 }
