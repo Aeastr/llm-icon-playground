@@ -30,7 +30,7 @@ struct AnyCodable: Codable {
             try container.encode(arrayValue)
         } else if let dictValue = value as? [String: AnyCodable] {
             try container.encode(dictValue)
-        } else if let schemaValue = value as? GeminiRequest.SchemaProperty {
+        } else if let schemaValue = value as? SchemaProperty {
             try container.encode(schemaValue)
         } else {
             throw EncodingError.invalidValue(value, EncodingError.Context(codingPath: encoder.codingPath, debugDescription: "Cannot encode value"))
@@ -52,7 +52,7 @@ struct AnyCodable: Codable {
             value = arrayValue
         } else if let dictValue = try? container.decode([String: AnyCodable].self) {
             value = dictValue
-        } else if let schemaValue = try? container.decode(GeminiRequest.SchemaProperty.self) {
+        } else if let schemaValue = try? container.decode(SchemaProperty.self) {
             value = schemaValue
         } else {
             throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Cannot decode value"))
