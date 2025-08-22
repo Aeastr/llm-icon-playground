@@ -204,46 +204,49 @@ class GeminiClient {
     }
     
     /// Generates an icon based on a text description using structured output
-    func generateIcon(description: String, systemPrompt: String, completion: @escaping (Result<IconFile, Error>) -> Void) {
-        generateStructuredIcon(description: description, systemPrompt: systemPrompt, completion: completion)
+    func generateIcon(description: String, systemPrompt: String, chatLogger: ChatLogger? = nil, completion: @escaping (Result<IconFile, Error>) -> Void) {
+        generateStructuredIcon(description: description, systemPrompt: systemPrompt, chatLogger: chatLogger, completion: completion)
     }
     
     /// Generates an icon using structured output (JSON Schema) with fallback
-    func generateStructuredIcon(description: String, systemPrompt: String, completion: @escaping (Result<IconFile, Error>) -> Void) {
+    func generateStructuredIcon(description: String, systemPrompt: String, chatLogger: ChatLogger? = nil, completion: @escaping (Result<IconFile, Error>) -> Void) {
         let prompt = buildPrompt(description: description, systemPrompt: systemPrompt)
         
-        print("🔧 Attempting structured output generation...")
+        chatLogger?.addUserMessage(description)
+        chatLogger?.addSystemMessage("🔧 Attempting structured output generation...")
+        
         generateStructuredText(prompt: prompt, schema: IconFile.responseSchema()) { result in
             switch result {
             case .success(let response):
                 do {
                     let iconFile = try self.parseIconResponse(response)
-                    print("✅ Structured output successful")
+                    chatLogger?.addSystemMessage("✅ Structured output successful")
+                    chatLogger?.addAssistantMessage(String(response.prefix(500)) + (response.count > 500 ? "..." : ""))
                     completion(.success(iconFile))
                 } catch {
-                    print("❌ Structured output parsing failed: \(error.localizedDescription)")
+                    chatLogger?.addErrorMessage("❌ Structured output parsing failed: \(error.localizedDescription)")
                     // Fallback to unstructured
                     self.fallbackToUnstructured(description: description, systemPrompt: systemPrompt, 
-                                               originalError: error, completion: completion)
+                                               originalError: error, chatLogger: chatLogger, completion: completion)
                 }
             case .failure(let error):
-                print("❌ Structured output API call failed: \(error.localizedDescription)")
+                chatLogger?.addErrorMessage("❌ Structured output API call failed: \(error.localizedDescription)")
                 // Fallback to unstructured
                 self.fallbackToUnstructured(description: description, systemPrompt: systemPrompt, 
-                                           originalError: error, completion: completion)
+                                           originalError: error, chatLogger: chatLogger, completion: completion)
             }
         }
     }
     
     /// Fallback to unstructured generation with detailed error reporting
     private func fallbackToUnstructured(description: String, systemPrompt: String, 
-                                      originalError: Error, completion: @escaping (Result<IconFile, Error>) -> Void) {
-        print("🔄 Falling back to unstructured generation...")
+                                      originalError: Error, chatLogger: ChatLogger? = nil, completion: @escaping (Result<IconFile, Error>) -> Void) {
+        chatLogger?.addSystemMessage("🔄 Falling back to unstructured generation...")
         
-        generateUnstructuredIcon(description: description, systemPrompt: systemPrompt) { fallbackResult in
+        generateUnstructuredIcon(description: description, systemPrompt: systemPrompt, chatLogger: chatLogger) { fallbackResult in
             switch fallbackResult {
             case .success(let iconFile):
-                print("✅ Fallback to unstructured successful")
+                chatLogger?.addSystemMessage("✅ Fallback to unstructured successful")
                 // Create a detailed error for the UI but still return success
                 let fallbackError = GeminiError.structuredOutputFailed(
                     originalError.localizedDescription, 
@@ -262,7 +265,7 @@ class GeminiClient {
                 }
                 
             case .failure(let fallbackError):
-                print("❌ Both structured and unstructured generation failed")
+                chatLogger?.addErrorMessage("❌ Both structured and unstructured generation failed")
                 let detailedError = GeminiError.structuredOutputFailed(
                     "Structured: \(originalError.localizedDescription), Unstructured: \(fallbackError.localizedDescription)",
                     fallbackAttempted: true
@@ -273,29 +276,31 @@ class GeminiClient {
     }
     
     /// Fallback to unstructured generation
-    func generateUnstructuredIcon(description: String, systemPrompt: String, completion: @escaping (Result<IconFile, Error>) -> Void) {
+    func generateUnstructuredIcon(description: String, systemPrompt: String, chatLogger: ChatLogger? = nil, completion: @escaping (Result<IconFile, Error>) -> Void) {
         let prompt = buildPrompt(description: description, systemPrompt: systemPrompt)
         
-        generateText(prompt: prompt) { result in
+        generateText(prompt: prompt, chatLogger: chatLogger) { result in
             switch result {
             case .success(let response):
-                print("🔍 Raw LLM Response Length: \(response.count)")
-                print("🔍 Raw LLM Response: '\(response)'")
+                chatLogger?.addDebugMessage("🔍 Raw LLM Response Length: \(response.count)")
+                chatLogger?.addAssistantMessage(String(response.prefix(1000)) + (response.count > 1000 ? "..." : ""))
                 
                 do {
                     let iconFile = try self.parseIconResponse(response)
                     completion(.success(iconFile))
                 } catch {
+                    chatLogger?.addErrorMessage("Failed to parse icon: \(error.localizedDescription)")
                     completion(.failure(error))
                 }
             case .failure(let error):
+                chatLogger?.addErrorMessage("Generation failed: \(error.localizedDescription)")
                 completion(.failure(error))
             }
         }
     }
     
     /// Raw text generation (for debugging)
-    func generateText(prompt: String, completion: @escaping (Result<String, Error>) -> Void) {
+    func generateText(prompt: String, chatLogger: ChatLogger? = nil, completion: @escaping (Result<String, Error>) -> Void) {
         guard !apiKey.isEmpty else {
             completion(.failure(GeminiError.invalidAPIKey))
             return

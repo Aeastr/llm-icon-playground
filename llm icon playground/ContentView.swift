@@ -8,11 +8,16 @@
 import SwiftUI
 internal import UniformTypeIdentifiers
 
+extension UTType {
+    static let iconFile = UTType(filenameExtension: "icon")!
+}
+
 struct ContentView: View {
     @State private var iconName = ""
     @State private var iconDescription = ""
-    @State private var outputDirectory: URL?
-    @State private var showingDirectoryPicker = false
+    @State private var selectedIconFile: URL?
+    @State private var showingIconFilePicker = false
+    @State private var showingNewIconSheet = false
     @State private var statusMessage = ""
     @State private var isAccessingSecurityScopedResource = false
     @State private var apiKey = ""
@@ -24,75 +29,34 @@ struct ContentView: View {
     @State private var showingFallbackAlert = false
     @State private var fallbackAlertTitle = ""
     @State private var fallbackAlertMessage = ""
-    
+    @State private var showChat = true
+    @State private var chatLogger = ChatLogger()
     private let userDefaults = UserDefaults.standard
-    private let outputDirectoryKey = "outputDirectory"
+    private let selectedIconFileKey = "selectedIconFile"
     
     var body: some View {
         NavigationStack{
-            HStack{
                 ScrollView{
                     VStack(spacing: 15) {
-                        // Model Selection
-                        if GeminiClient.hasValidAPIKey() {
-                            VStack(alignment: .leading, spacing: 10) {
-                                HStack{
-                                    Text("Model:")
-                                        Spacer()
-                                    Picker(selection: $selectedModel) {
-                                        ForEach(availableModels, id: \.self) { model in
-                                            Text(model).tag(model)
-                                        }
-                                    } label: {
-                                    }
-                                }
-                                .pickerStyle(.menu)
-                                
-                                Button("Refresh Models") {
-                                    refreshModels()
-                                }
-                                .buttonStyle(.borderless)
-                                .font(.caption)
-                                .frame(maxWidth: .infinity, alignment: .trailing)
-                            }
-                        }
-                        
-                        Divider()
-                        
-                            VStack(alignment: .leading, spacing: 10) {
-                                Text("Icon Name:")
-                                TextField(iconDescription.isEmpty ? "Enter Icon name" : iconDescription, text: $iconName)
-                                    .textFieldStyle(.roundedBorder)
-                            }
-                            
-                            VStack(alignment: .leading, spacing: 10) {
-                                Text("Icon Description:")
-                                TextField("Describe your icon (e.g., 'Coffee app with steam')", text: $iconDescription, axis: .vertical)
-                                    .textFieldStyle(.roundedBorder)
-                                    .lineLimit(3...6)
-                            }
-                        
-                        
-                        Divider()
                         
                         VStack(alignment: .leading, spacing: 10) {
-                            Text("Output Directory:")
+                            Text("Icon File:")
                             HStack {
-                                Text(outputDirectory?.lastPathComponent ?? "No directory selected")
+                                Text(selectedIconFile?.lastPathComponent ?? "No .icon file selected")
                                     .foregroundColor(.secondary)
                                 Spacer()
-                                Button("Choose...") {
-                                    showingDirectoryPicker = true
+                                Button("Open...") {
+                                    showingIconFilePicker = true
+                                }
+                                Button("New...") {
+                                    showingNewIconSheet = true
                                 }
                             }
-                            
-                            Toggle("Use model folders", isOn: $useModelFolder)
-                                .help("Creates a subfolder named after the model (e.g., gemini-2.5-flash)")
                         }
                     }
                     .padding()
                     .onAppear {
-                        loadSavedDirectory()
+                        loadSavedIconFile()
                         if GeminiClient.hasValidAPIKey() {
                             refreshModels()
                         }
@@ -112,54 +76,36 @@ struct ContentView: View {
                         }
                     }
                     .fileImporter(
-                        isPresented: $showingDirectoryPicker,
-                        allowedContentTypes: [.folder],
+                        isPresented: $showingIconFilePicker,
+                        allowedContentTypes: [.iconFile, .folder],
                         allowsMultipleSelection: false
                     ) { result in
                         switch result {
                         case .success(let urls):
                             if let url = urls.first {
                                 // Stop previous resource access if any
-                                if isAccessingSecurityScopedResource, let currentDir = outputDirectory {
-                                    currentDir.stopAccessingSecurityScopedResource()
+                                if isAccessingSecurityScopedResource, let currentFile = selectedIconFile {
+                                    currentFile.stopAccessingSecurityScopedResource()
                                 }
                                 
                                 // Start accessing security-scoped resource
                                 if url.startAccessingSecurityScopedResource() {
-                                    outputDirectory = url
+                                    selectedIconFile = url
                                     isAccessingSecurityScopedResource = true
-                                    saveDirectory(url)
-                                    statusMessage = "Directory selected: \(url.lastPathComponent)"
+                                    saveIconFile(url)
+                                    statusMessage = "Icon file selected: \(url.lastPathComponent)"
                                 } else {
-                                    statusMessage = "Failed to access selected directory"
+                                    statusMessage = "Failed to access selected icon file"
                                 }
                             }
                         case .failure(let error):
-                            statusMessage = "Error selecting directory: \(error.localizedDescription)"
+                            statusMessage = "Error selecting icon file: \(error.localizedDescription)"
                         }
                     }
                     .alert(fallbackAlertTitle, isPresented: $showingFallbackAlert) {
                         Button("OK") { }
                     } message: {
                         Text(fallbackAlertMessage)
-                    }
-                }
-                
-                Color.clear
-                    .overlay {
-                        Text("Preview")
-                    }
-                    .overlay(alignment: .bottom){
-                        if isGenerating {
-                            HStack {
-                                ProgressView()
-                                    .scaleEffect(0.8)
-                                Text("Generating icon...")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                            .padding()
-                        }
                     }
             }
             .navigationTitle("Icon Experiment")
@@ -185,20 +131,60 @@ struct ContentView: View {
                         .disabled(!canGenerateIcon() || isGenerating)
                 }
             }
+            .inspector(isPresented: $showChat) {
+                ChatView(chatLogger: chatLogger)
+                    .safeAreaInset(edge: .bottom) {
+                        VStack(spacing: 5){
+                            TextField("Describe your icon (e.g., 'Coffee app with steam')", text: $iconDescription, axis: .vertical)
+                                .textFieldStyle(.roundedBorder)
+                                .lineLimit(3...6)
+                            
+                            
+                            // Model Selection
+                            if GeminiClient.hasValidAPIKey() {
+                                VStack(alignment: .leading, spacing: 10) {
+                                    HStack{
+                                        Picker("Model",selection: $selectedModel) {
+                                            ForEach(availableModels, id: \.self) { model in
+                                                Text(model).tag(model)
+                                            }
+                                        }
+                                        .labelsHidden()
+                                        .pickerStyle(.menu)
+                                        Spacer()
+                                    }
+                                }
+                            }
+                        }
+                        .padding(8)
+                    }
+                    .inspectorColumnWidth(min: 200, ideal: 300, max: 400)
+            }
         }
         .sheet(isPresented: $showingAPIKeyField) {
-            HStack {
-                SecureField("Enter Gemini API key", text: $apiKey)
-                    .textFieldStyle(.roundedBorder)
-                Button("Save") {
-                    saveAPIKey()
-                }
-                .disabled(apiKey.isEmpty)
-                Button("Cancel") {
-                    showingAPIKeyField = false
-                    apiKey = ""
+            VStack {
+                Text("API Key")
+                    .font(.headline)
+                HStack {
+                    SecureField("Enter Gemini API key", text: $apiKey)
+                        .textFieldStyle(.roundedBorder)
+                    Button("Save") {
+                        saveAPIKey()
+                    }
+                    .disabled(apiKey.isEmpty)
+                    Button("Cancel") {
+                        showingAPIKeyField = false
+                        apiKey = ""
+                    }
                 }
             }
+            .padding()
+        }
+        .sheet(isPresented: $showingNewIconSheet) {
+            NewIconSheet(onIconCreated: { url in
+                selectedIconFile = url
+                statusMessage = "New icon file created: \(url.lastPathComponent)"
+            })
         }
     }
     
@@ -254,7 +240,7 @@ struct ContentView: View {
     private func canGenerateIcon() -> Bool {
         return GeminiClient.hasValidAPIKey() && 
                !iconDescription.isEmpty &&
-               outputDirectory != nil
+               selectedIconFile != nil
     }
     
     private func saveAPIKey() {
@@ -268,7 +254,7 @@ struct ContentView: View {
     }
     
     private func generateAIIcon() {
-        guard let outputDir = outputDirectory else { return }
+        guard let iconFile = selectedIconFile else { return }
         guard let geminiClient = GeminiClient.client(model: selectedModel) else {
             statusMessage = "Error: No valid API key"
             return
@@ -279,7 +265,7 @@ struct ContentView: View {
         
         let systemPrompt = PromptBuilder.buildSystemPrompt()
         
-        geminiClient.generateIcon(description: iconDescription, systemPrompt: systemPrompt) { result in
+        geminiClient.generateIcon(description: iconDescription, systemPrompt: systemPrompt, chatLogger: chatLogger) { result in
             DispatchQueue.main.async {
                 self.isGenerating = false
                 
