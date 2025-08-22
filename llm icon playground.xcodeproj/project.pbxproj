@@ -11,7 +11,6 @@
 		2DCE9BC42E57E47F00E2AFC9 /* assets.md in Resources */ = {isa = PBXBuildFile; fileRef = 2DCE9BBD2E57E47F00E2AFC9 /* assets.md */; };
 		2DCE9BC52E57E47F00E2AFC9 /* syntax.md in Resources */ = {isa = PBXBuildFile; fileRef = 2DCE9BC12E57E47F00E2AFC9 /* syntax.md */; };
 		2DCE9BC62E57E47F00E2AFC9 /* examples.md in Resources */ = {isa = PBXBuildFile; fileRef = 2DCE9BBF2E57E47F00E2AFC9 /* examples.md */; };
-		2DCE9BC72E57E47F00E2AFC9 /* shapes.md in Resources */ = {isa = PBXBuildFile; fileRef = 2DCE9BC02E57E47F00E2AFC9 /* shapes.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,7 +18,6 @@
 		2DCE9BBD2E57E47F00E2AFC9 /* assets.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = assets.md; sourceTree = "<group>"; };
 		2DCE9BBE2E57E47F00E2AFC9 /* constraints.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = constraints.md; sourceTree = "<group>"; };
 		2DCE9BBF2E57E47F00E2AFC9 /* examples.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = examples.md; sourceTree = "<group>"; };
-		2DCE9BC02E57E47F00E2AFC9 /* shapes.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = shapes.md; sourceTree = "<group>"; };
 		2DCE9BC12E57E47F00E2AFC9 /* syntax.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = syntax.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -65,7 +63,6 @@
 				2DCE9BBD2E57E47F00E2AFC9 /* assets.md */,
 				2DCE9BBE2E57E47F00E2AFC9 /* constraints.md */,
 				2DCE9BBF2E57E47F00E2AFC9 /* examples.md */,
-				2DCE9BC02E57E47F00E2AFC9 /* shapes.md */,
 				2DCE9BC12E57E47F00E2AFC9 /* syntax.md */,
 			);
 			path = "llm-docs";
@@ -139,7 +136,6 @@
 				2DCE9BC42E57E47F00E2AFC9 /* assets.md in Resources */,
 				2DCE9BC52E57E47F00E2AFC9 /* syntax.md in Resources */,
 				2DCE9BC62E57E47F00E2AFC9 /* examples.md in Resources */,
-				2DCE9BC72E57E47F00E2AFC9 /* shapes.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
